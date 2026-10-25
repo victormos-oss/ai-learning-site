@@ -48,7 +48,8 @@ Next.js (App Router) + MDX, Tailwind, Docker на VPS2, образ собира�
 ## Brand Commitments
 
 - Имя автора: Виктор Дмитриев. Домен learn.vdmitriev.com как поддомен личного сайта vdmitriev.com.
-- Telegram @prodmastermos, менять ник нельзя.
+- Telegram @prodmastermos, менять ник нельзя. Почта для контакта victor@vdmitriev.com, как на личном сайте.
+- Репозиторий публичный: github.com/victormos-oss/ai-learning-site. DNS learn.vdmitriev.com только через Cloudflare DNS без прокси, TLS на VPS2.
 - Цены на сайте не показывать (позиция заказчика с vdmitriev.com).
 - Визуальный стиль не закреплён: заказчик дал свободу выбора. Стиль vdmitriev.com не обязателен к наследованию.
 - Текст без длинных тире, без надписей-«eyebrow» над заголовками (правило заказчика с vdmitriev.com).
