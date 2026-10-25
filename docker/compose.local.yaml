@@ -1,0 +1,18 @@
+# Local image build for smoke testing:
+#   docker compose -f docker/compose.local.yaml up --build
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      args:
+        GIT_SHA: local
+        NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3141
+    ports:
+      - "127.0.0.1:3141:3000"
+    environment:
+      NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3141
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/.next/cache

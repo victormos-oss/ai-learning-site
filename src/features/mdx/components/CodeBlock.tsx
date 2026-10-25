@@ -26,7 +26,7 @@ export function CodeBlock({ html, raw, language, title, footer }: Props) {
         <CopyButton text={raw} label={t("copy")} doneLabel={t("copied")} />
       </div>
       {/* A horizontally scrollable region must be keyboard reachable (axe: scrollable-region-focusable). */}
-      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
+      {/* eslint-disable jsx-a11y/no-noninteractive-tabindex */}
       <div
         tabIndex={0}
         role="region"
@@ -34,6 +34,7 @@ export function CodeBlock({ html, raw, language, title, footer }: Props) {
         className="overflow-x-auto px-4 py-4 text-[0.92rem] leading-relaxed [&_code]:font-mono [&_pre]:m-0 [&_pre]:bg-transparent"
         dangerouslySetInnerHTML={{ __html: html }}
       />
+      {/* eslint-enable jsx-a11y/no-noninteractive-tabindex */}
       {footer && (
         <div className="border-t border-white/10 px-4 py-2 text-sm">{footer}</div>
       )}

@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Lint, types, unit, build, e2e
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CI: "true"
+      NEXT_TELEMETRY_DISABLED: "1"
+      NEXT_PUBLIC_SITE_URL: https://learn.vdmitriev.com
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run content:build && npm run typecheck
+
+      - name: Unit tests with coverage
+        run: npm run test:coverage
+
+      - name: Build
+        run: npm run build
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: End-to-end and accessibility tests
+        run: npm run e2e -- --project=chromium
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage
+          retention-days: 7

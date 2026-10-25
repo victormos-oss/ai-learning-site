@@ -10,6 +10,8 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SkipLink } from "@/components/layout/SkipLink";
 import { THEME_BOOT_SCRIPT } from "@/features/theme/theme-script";
+import { AnnouncerProvider } from "@/features/a11y/Announcer";
+import { RouteFocus } from "@/features/a11y/RouteFocus";
 
 type Props = {
   children: React.ReactNode;
@@ -47,12 +49,15 @@ export default async function LocaleLayout({ children, params }: Props) {
       </head>
       <body className="flex min-h-dvh flex-col bg-paper font-text text-ink antialiased">
         <NextIntlClientProvider>
-          <SkipLink />
-          <SiteHeader />
-          <main id="content" tabIndex={-1} className="flex-1 outline-none">
-            {children}
-          </main>
-          <SiteFooter />
+          <AnnouncerProvider>
+            <SkipLink />
+            <SiteHeader />
+            <main id="content" tabIndex={-1} className="flex-1 outline-none">
+              {children}
+            </main>
+            <SiteFooter />
+            <RouteFocus />
+          </AnnouncerProvider>
         </NextIntlClientProvider>
       </body>
     </html>

@@ -50,3 +50,6 @@ next-env.d.ts
 /playwright-report
 /.impeccable/review
 /.impeccable/live
+
+# keep the example env tracked
+!.env.example

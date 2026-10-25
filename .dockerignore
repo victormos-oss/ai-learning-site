@@ -1,0 +1,16 @@
+node_modules
+.next
+.content-collections
+public/content
+coverage
+playwright-report
+test-results
+.git
+.github
+.impeccable
+docs
+tests
+.cache
+*.md
+!README.md
+.env*

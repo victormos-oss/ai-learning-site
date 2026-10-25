@@ -1,0 +1,34 @@
+# Production compose for VPS2. Place next to .env.production in /srv/learn.
+# Deploy: IMAGE_TAG=sha-<short> docker compose pull && docker compose up -d
+# Roll back: set IMAGE_TAG to the previous tag and run the same two commands.
+
+services:
+  app:
+    image: ghcr.io/victormos-oss/ai-learning-site:${IMAGE_TAG:-latest}
+    container_name: learn-app
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    ports:
+      - "127.0.0.1:3141:3000"
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/.next/cache
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 384m
+    cpus: "1.0"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
