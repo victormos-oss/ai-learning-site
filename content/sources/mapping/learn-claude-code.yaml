@@ -1,0 +1,163 @@
+# Mapping "upstream file -> lesson" for shareAI-lab/learn-claude-code.
+# from:   README path relative to the clone root (must satisfy include/exclude in sources.yaml)
+# module: lesson module folder under content/tracks/<track>/modules/
+# order:  position inside the module; lesson folder becomes <NN>-<slug>
+# code / assets: relative to the section folder (dirname of `from`)
+# estimatedMinutes: ~1 minute per 180 words of README, rounded up to 5
+
+source: learn-claude-code
+track: claude-code-zero
+
+entries:
+  - from: s01_agent_loop/README.md
+    key: cc-zero.agent-loop
+    module: 02-one-agent
+    slug: agent-loop
+    order: 1
+    code: code.py
+    assets: ["images/*"]
+    estimatedMinutes: 5
+
+  - from: s02_tool_use/README.md
+    key: cc-zero.tool-use
+    module: 02-one-agent
+    slug: tool-use
+    order: 2
+    code: code.py
+    assets: ["images/*"]
+    estimatedMinutes: 5
+
+  - from: s03_permission/README.md
+    key: cc-zero.permission
+    module: 02-one-agent
+    slug: permission
+    order: 3
+    code: code.py
+    assets: ["images/*"]
+    estimatedMinutes: 5
+
+  - from: s04_hooks/README.md
+    key: cc-zero.hooks
+    module: 02-one-agent
+    slug: hooks
+    order: 4
+    code: code.py
+    assets: ["images/*"]
+    estimatedMinutes: 10
+
+  - from: s05_todo_write/README.md
+    key: cc-zero.todo-write
+    module: 02-one-agent
+    slug: todo-write
+    order: 5
+    code: code.py
+    assets: ["images/*"]
+    estimatedMinutes: 5
+
+  - from: s06_subagent/README.md
+    key: cc-zero.subagent
+    module: 02-one-agent
+    slug: subagent
+    order: 6
+    code: code.py
+    assets: ["images/*"]
+    estimatedMinutes: 5
+
+  - from: s07_skill_loading/README.md
+    key: cc-zero.skill-loading
+    module: 03-context-and-long-tasks
+    slug: skill-loading
+    order: 1
+    code: code.py
+    assets: ["images/*"]
+    estimatedMinutes: 5
+
+  - from: s08_context_compact/README.md
+    key: cc-zero.context-compact
+    module: 03-context-and-long-tasks
+    slug: context-compact
+    order: 2
+    code: code.py
+    assets: ["images/*"]
+    estimatedMinutes: 15
+
+  - from: s09_memory/README.md
+    key: cc-zero.memory
+    module: 03-context-and-long-tasks
+    slug: memory
+    order: 3
+    code: code.py
+    assets: ["images/*"]
+    estimatedMinutes: 10
+
+  - from: s10_task_system/README.md
+    key: cc-zero.task-system
+    module: 03-context-and-long-tasks
+    slug: task-system
+    order: 4
+    code: code.py
+    assets: ["images/*"]
+    estimatedMinutes: 10
+
+  - from: s11_background_tasks/README.md
+    key: cc-zero.background-tasks
+    module: 03-context-and-long-tasks
+    slug: background-tasks
+    order: 5
+    code: code.py
+    assets: ["images/*"]
+    estimatedMinutes: 10
+
+  - from: s12_cron_scheduler/README.md
+    key: cc-zero.cron-scheduler
+    module: 04-autonomy-and-teams
+    slug: cron-scheduler
+    order: 1
+    code: code.py
+    assets: ["images/*"]
+    estimatedMinutes: 10
+
+  - from: s13_agent_teams/README.md
+    key: cc-zero.agent-teams
+    module: 04-autonomy-and-teams
+    slug: agent-teams
+    order: 2
+    code: code.py
+    assets: ["images/*"]
+    estimatedMinutes: 20
+
+  - from: s14_mcp_plugin/README.md
+    key: cc-zero.mcp-plugin
+    module: 04-autonomy-and-teams
+    slug: mcp-plugin
+    order: 3
+    code: code.py
+    assets: ["images/*"]
+    estimatedMinutes: 10
+
+  - from: s15_integrated_harness/README.md
+    key: cc-zero.integrated-harness
+    module: 04-autonomy-and-teams
+    slug: integrated-harness
+    order: 4
+    code: code.py
+    assets: ["images/*"]
+    estimatedMinutes: 15
+
+  - from: s16_workflow_runtime/README.md
+    key: cc-zero.workflow-runtime
+    module: 04-autonomy-and-teams
+    slug: workflow-runtime
+    order: 5
+    code: code.py
+    assets: ["images/*"]
+    estimatedMinutes: 15
+
+  - from: s17_goal_loop/README.md
+    key: cc-zero.goal-loop
+    module: 04-autonomy-and-teams
+    slug: goal-loop
+    order: 6
+    code: code.py
+    assets: ["images/*"]
+    estimatedMinutes: 10

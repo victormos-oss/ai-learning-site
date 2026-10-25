@@ -31,8 +31,13 @@ const LANGUAGE_BY_EXTENSION: Record<string, string> = {
  * Lesson path inside content/tracks:
  *   <track>/modules/<module-dir>/lessons/<lesson-dir>/<locale>.mdx
  */
+/** content-collections reports directories with the OS separator; normalize to "/". */
+function segments(directory: string): string[] {
+  return directory.split(/[\\/]/);
+}
+
 function parseLessonPath(directory: string, fileName: string) {
-  const [trackDir, , moduleDir, , lessonDir] = directory.split("/");
+  const [trackDir, , moduleDir, , lessonDir] = segments(directory);
   const locale = localeSchema.parse(fileName.replace(/\.mdx$/, ""));
   if (!trackDir || !moduleDir || !lessonDir) {
     throw new Error(`Unexpected lesson location: ${directory}/${fileName}`);
@@ -76,7 +81,7 @@ const tracks = defineCollection({
   include: "*/track.yaml",
   parser: "yaml",
   schema: trackSchema,
-  transform: (doc) => ({ ...doc, trackDir: doc._meta.directory }),
+  transform: (doc) => ({ ...doc, trackDir: segments(doc._meta.directory)[0] ?? "" }),
 });
 
 const modules = defineCollection({
@@ -86,7 +91,7 @@ const modules = defineCollection({
   parser: "yaml",
   schema: moduleSchema,
   transform: (doc) => {
-    const [trackDir, , moduleDir] = doc._meta.directory.split("/");
+    const [trackDir, , moduleDir] = segments(doc._meta.directory);
     return { ...doc, trackDir: trackDir ?? "", moduleDir: moduleDir ?? "" };
   },
 });
@@ -103,7 +108,7 @@ const lessons = defineCollection({
     );
     const moduleMeta = context
       .documents(modules)
-      .find((m) => m._meta.directory === `${trackDir}/modules/${moduleDir}`);
+      .find((m) => segments(m._meta.directory).join("/") === `${trackDir}/modules/${moduleDir}`);
     if (!moduleMeta)
       throw new Error(`${doc.key}: module.yaml not found for ${moduleDir}`);
     if (locale !== "en" && !doc.translation) {

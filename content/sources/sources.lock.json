@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "sources": {
+    "learn-claude-code": {
+      "commit": "ce8f9f186058939da54c9d6fead78dfb5d0fd6c3",
+      "updatedAt": "2026-10-25T19:43:08.400Z",
+      "files": {
+        "s01_agent_loop/code.py": "sha256:abe71cd04d1b63aaf6f4e7c6220aa831779d25fd00f6eec1abd3f12c742b0d16",
+        "s01_agent_loop/images/agent-loop.en.svg": "sha256:72fa276fe3f270dc0cd3e113d840b8dc2e587c4d7c646eba3d50de90488d1101",
+        "s01_agent_loop/images/agent-loop.ja.svg": "sha256:5ff66423fa941fc83fd83e9a2911cbeef77f9ed1fda0e46d03e8211c02683f68",
+        "s01_agent_loop/images/agent-loop.svg": "sha256:7c7576798ae6f81defbbf5c384cd756701834f238dd68aef2e282e4b6dcd5f2d",
+        "s01_agent_loop/README.md": "sha256:6d43508a6898ed4cf1176443ff8518d999d1041e887f40c89854e175651c9d10"
+      }
+    }
+  }
+}

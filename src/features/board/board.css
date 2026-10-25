@@ -1,0 +1,157 @@
+/*
+  Split-flap board primitives. The board is a matte anthracite object; flaps are
+  cream plates with a dark slit across the middle. No glow anywhere: depth comes
+  from the plate's thickness (a 2px bottom shadow) and the slit, nothing else.
+*/
+
+.board {
+  --flap-h: 2.5rem;
+  --flap-w: 1.75rem;
+  --flap-size: 1.55rem;
+  background:
+    linear-gradient(180deg, #2a2d33 0, var(--board) 64px, var(--board-deep) 100%);
+  color: var(--board-text);
+}
+
+.flap-text {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  font-family: var(--font-board);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.flap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--flap-w);
+  block-size: var(--flap-h);
+  font-size: var(--flap-size);
+  color: var(--flap-ink);
+  background: var(--flap);
+  border-radius: var(--radius);
+  box-shadow:
+    0 2px 0 var(--flap-slit),
+    inset 0 -1px 0 rgb(0 0 0 / 0.22);
+  overflow: hidden;
+  perspective: 300px;
+}
+
+.flap::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  block-size: 2px;
+  margin-top: -1px;
+  background: var(--flap-slit);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.flap[data-tone="amber"] {
+  background: var(--amber);
+  color: var(--amber-ink);
+}
+
+.flap[data-tone="done"] {
+  background: var(--flap-done);
+  color: var(--flap-done-ink);
+}
+
+.flap[data-space="true"] {
+  background: transparent;
+  box-shadow: none;
+}
+
+.flap[data-space="true"]::after {
+  display: none;
+}
+
+/* Two half-plates used while flipping; the resting state shows a single glyph. */
+.flap__top,
+.flap__bottom {
+  position: absolute;
+  inset-inline: 0;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  backface-visibility: hidden;
+  background: inherit;
+  color: inherit;
+}
+
+.flap__top {
+  top: 0;
+  block-size: 50%;
+  align-items: flex-end;
+  transform-origin: bottom center;
+}
+
+.flap__bottom {
+  bottom: 0;
+  block-size: 50%;
+  align-items: flex-start;
+  transform-origin: top center;
+}
+
+.flap__top > span,
+.flap__bottom > span {
+  display: block;
+  line-height: var(--flap-h);
+  block-size: var(--flap-h);
+}
+
+.flap__bottom > span {
+  transform: translateY(-50%);
+}
+
+.flap-text--size-xl {
+  --flap-h: clamp(3.5rem, 7.8vw, 7rem);
+  --flap-w: clamp(2.1rem, 4.6vw, 4.15rem);
+  --flap-size: clamp(2.4rem, 5.6vw, 5.25rem);
+  gap: clamp(0.25rem, 0.55vw, 0.5rem);
+}
+
+.flap-text--size-lg {
+  --flap-h: 3rem;
+  --flap-w: 1.9rem;
+  --flap-size: 1.9rem;
+}
+
+.flap-text--size-sm {
+  --flap-h: 1.9rem;
+  --flap-w: 1.4rem;
+  --flap-size: 1.15rem;
+}
+
+/* Below 640px long names collapse to one plate strip instead of a plate per letter. */
+.flap-strip {
+  display: inline-block;
+  padding: 0.35rem 0.6rem;
+  font-family: var(--font-board);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--flap-ink);
+  background: var(--flap);
+  border-radius: var(--radius);
+  box-shadow: 0 2px 0 var(--flap-slit);
+  line-height: 1.1;
+}
+
+.flap-strip[data-tone="amber"] {
+  background: var(--amber);
+  color: var(--amber-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flap__top,
+  .flap__bottom {
+    transition: none !important;
+    animation: none !important;
+  }
+}

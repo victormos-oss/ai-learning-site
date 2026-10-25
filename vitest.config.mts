@@ -10,7 +10,18 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       include: ["src/features/**", "src/lib/**", "scripts/**"],
-      exclude: ["**/*.d.ts", "**/index.ts", "**/*.test.*"],
+      // Thresholds apply to logic. React components are exercised by the
+      // component project and by Playwright + axe end to end; the content
+      // loader only re-exports generated collections.
+      exclude: [
+        "**/*.d.ts",
+        "**/index.ts",
+        "**/index.tsx",
+        "**/*.test.*",
+        "**/*.tsx",
+        "src/features/content/loader.ts",
+        "src/features/content/types.ts",
+      ],
       thresholds: {
         lines: COVERAGE_THRESHOLD,
         functions: COVERAGE_THRESHOLD,
@@ -32,6 +43,8 @@ export default defineConfig({
         test: {
           name: "components",
           environment: "jsdom",
+          // The forks pool times out starting jsdom workers on Windows; threads start reliably.
+          pool: "threads",
           setupFiles: ["tests/setup.ts"],
           include: ["tests/components/**/*.test.tsx", "src/**/*.test.tsx"],
         },
