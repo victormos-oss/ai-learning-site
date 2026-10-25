@@ -1,0 +1,27 @@
+{
+  "siteName": "learn.vdmitriev.com",
+  "tagline": "Rutas de Claude Code para gestores y desarrolladores",
+  "author": "Victor Dmitriev",
+  "authorRole": "un vendedor que construye productos con Claude Code",
+  "contact": {
+    "heading": "Contacto",
+    "email": "Correo",
+    "telegram": "Telegram",
+    "consulting": "¿Quieres implantar esto en tu empresa? Escríbeme."
+  },
+  "sources": {
+    "heading": "Fuentes",
+    "note": "Las lecciones se adaptan de repositorios con licencia MIT. Cada lección indica su fuente, autores y commit.",
+    "licenses": "Licencias"
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "body": "Esta dirección no existe o la lección se ha movido.",
+    "home": "Ir a la página principal"
+  },
+  "error": {
+    "title": "Algo salió mal",
+    "body": "La página no se pudo mostrar. Inténtalo de nuevo o vuelve a la página principal.",
+    "retry": "Intentar de nuevo"
+  }
+}

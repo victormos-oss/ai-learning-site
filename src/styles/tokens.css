@@ -1,0 +1,102 @@
+/*
+  Design tokens for learn.vdmitriev.com.
+  World: a split-flap departures board. The board is the landing's only ground;
+  reading pages use the "timetable paper" surface in light and dark.
+*/
+
+:root {
+  /* Board */
+  --board: #23262b;
+  --board-deep: #1b1d21;
+  --rail: #9ea3a8;
+  --rail-ink: #15171a;
+  --flap: #ece6d6;
+  --flap-ink: #15171a;
+  --flap-done: #cfc9b9;
+  --flap-done-ink: #3f3d38;
+  --flap-slit: #0b0c0e;
+  --amber: #e0a526;
+  --amber-ink: #1a1507;
+  --board-text: #d9dbde;
+  --board-muted: #a7abb1;
+  --board-line: #3a3e45;
+
+  /* Paper surface (reading pages), light */
+  --paper: #f6f4ee;
+  --paper-elev: #ffffff;
+  --paper-line: #d8d4c8;
+  --ink: #1b1c1f;
+  --ink-muted: #4f5257;
+  --accent: #8a5a0e;
+  --accent-ink: #ffffff;
+  --focus: #e0a526;
+  --code-bg: #1f2227;
+  --code-ink: #ece6d6;
+
+  /* Type */
+  --font-board: "Sofia Sans Extra Condensed Variable", "Arial Narrow", sans-serif;
+  --font-text: "Golos Text Variable", system-ui, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "JetBrains Mono", Menlo, monospace;
+
+  /* Rhythm */
+  --radius: 3px;
+  --measure: 70ch;
+  --header-h: 64px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 150ms;
+  --dur: 320ms;
+}
+
+:root[data-theme="dark"] {
+  --paper: #17191c;
+  --paper-elev: #1f2227;
+  --paper-line: #343840;
+  --ink: #ece9e1;
+  --ink-muted: #b4b8be;
+  --accent: #e0a526;
+  --accent-ink: #1a1507;
+  --code-bg: #111316;
+  --code-ink: #ece6d6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #17191c;
+    --paper-elev: #1f2227;
+    --paper-line: #343840;
+    --ink: #ece9e1;
+    --ink-muted: #b4b8be;
+    --accent: #e0a526;
+    --accent-ink: #1a1507;
+    --code-bg: #111316;
+    --code-ink: #ece6d6;
+  }
+}
+
+@theme inline {
+  --color-board: var(--board);
+  --color-board-deep: var(--board-deep);
+  --color-rail: var(--rail);
+  --color-rail-ink: var(--rail-ink);
+  --color-flap: var(--flap);
+  --color-flap-ink: var(--flap-ink);
+  --color-flap-done: var(--flap-done);
+  --color-flap-done-ink: var(--flap-done-ink);
+  --color-amber: var(--amber);
+  --color-amber-ink: var(--amber-ink);
+  --color-board-text: var(--board-text);
+  --color-board-muted: var(--board-muted);
+  --color-board-line: var(--board-line);
+  --color-paper: var(--paper);
+  --color-paper-elev: var(--paper-elev);
+  --color-paper-line: var(--paper-line);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-focus: var(--focus);
+  --font-board: var(--font-board);
+  --font-text: var(--font-text);
+  --font-mono: var(--font-mono);
+  --radius-flap: var(--radius);
+}

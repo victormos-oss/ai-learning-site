@@ -1,0 +1,37 @@
+{
+  "breadcrumbs": "Migas de pan",
+  "tracks": "Rutas",
+  "toc": "En esta lección",
+  "minutes": "{count, plural, one {# minuto} other {# minutos}}",
+  "module": "Módulo {order}",
+  "lessonNumber": "Lección {order}",
+  "fallback": {
+    "title": "Esta lección está disponible en inglés por ahora",
+    "body": "La traducción está en curso. Abajo se muestra el texto original."
+  },
+  "nav": {
+    "label": "Navegación de lecciones",
+    "prev": "Lección anterior",
+    "next": "Lección siguiente",
+    "backToTrack": "Volver a la ruta"
+  },
+  "attribution": {
+    "heading": "Fuente y licencia",
+    "adapted": "Adaptado de",
+    "translated": "Traducido de",
+    "quoted": "Citas",
+    "original": "Material original de",
+    "license": "Licencia",
+    "viewSource": "Original en GitHub"
+  },
+  "code": {
+    "copy": "Copiar código",
+    "copied": "Copiado",
+    "file": "Archivo",
+    "regionLabel": "Código: {language}",
+    "openSource": "Abrir el archivo original en GitHub"
+  },
+  "figure": {
+    "englishOnly": "Las etiquetas del diagrama están en inglés."
+  }
+}

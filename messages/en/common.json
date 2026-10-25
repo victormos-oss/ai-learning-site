@@ -1,0 +1,27 @@
+{
+  "siteName": "learn.vdmitriev.com",
+  "tagline": "Claude Code tracks for managers and developers",
+  "author": "Victor Dmitriev",
+  "authorRole": "a salesperson who builds products with Claude Code",
+  "contact": {
+    "heading": "Contact",
+    "email": "Email",
+    "telegram": "Telegram",
+    "consulting": "Need this set up in your company? Write to me."
+  },
+  "sources": {
+    "heading": "Sources",
+    "note": "Lessons are adapted from MIT-licensed repositories. Every lesson names its source, authors and commit.",
+    "licenses": "Licenses"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "This address does not exist or the lesson has moved.",
+    "home": "Go to the home page"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "body": "The page failed to render. Try again or go back to the home page.",
+    "retry": "Try again"
+  }
+}

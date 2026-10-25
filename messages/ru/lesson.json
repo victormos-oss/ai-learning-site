@@ -1,0 +1,37 @@
+{
+  "breadcrumbs": "Хлебные крошки",
+  "tracks": "Треки",
+  "toc": "В этом уроке",
+  "minutes": "{count, plural, one {# минута} few {# минуты} many {# минут} other {# минуты}}",
+  "module": "Модуль {order}",
+  "lessonNumber": "Урок {order}",
+  "fallback": {
+    "title": "Этот урок пока доступен только на английском",
+    "body": "Перевод готовится. Ниже показан оригинальный текст."
+  },
+  "nav": {
+    "label": "Навигация по урокам",
+    "prev": "Предыдущий урок",
+    "next": "Следующий урок",
+    "backToTrack": "К треку"
+  },
+  "attribution": {
+    "heading": "Источник и лицензия",
+    "adapted": "Адаптировано из",
+    "translated": "Переведено из",
+    "quoted": "Цитаты",
+    "original": "Авторский материал",
+    "license": "Лицензия",
+    "viewSource": "Оригинал на GitHub"
+  },
+  "code": {
+    "copy": "Скопировать код",
+    "copied": "Скопировано",
+    "file": "Файл",
+    "regionLabel": "Код: {language}",
+    "openSource": "Открыть исходный файл на GitHub"
+  },
+  "figure": {
+    "englishOnly": "Подписи на схеме на английском."
+  }
+}

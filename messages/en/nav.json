@@ -1,0 +1,16 @@
+{
+  "main": "Main navigation",
+  "tracks": "Tracks",
+  "videos": "Videos",
+  "practice": "Practice",
+  "progress": "My progress",
+  "about": "Author",
+  "skipToContent": "Skip to content",
+  "language": "Language",
+  "theme": {
+    "label": "Theme",
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark"
+  }
+}

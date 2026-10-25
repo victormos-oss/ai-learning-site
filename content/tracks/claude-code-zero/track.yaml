@@ -1,0 +1,16 @@
+key: cc-zero
+slug: claude-code-zero
+order: 1
+published: true
+title:
+  en: Claude Code from zero
+  ru: Claude Code с нуля
+  es: Claude Code desde cero
+description:
+  en: From installing Claude Code to building your own agent. Four modules, quizzes, practice checked in your terminal, no sign-up.
+  ru: От установки Claude Code до собственного агента. Четыре модуля, квизы, практика с проверкой в терминале, без регистрации.
+  es: Desde instalar Claude Code hasta construir tu propio agente. Cuatro módulos, cuestionarios, práctica verificada en tu terminal, sin registro.
+audience:
+  en: Managers and salespeople without code first, developers second.
+  ru: Сначала менеджеры и продавцы без кода, потом разработчики.
+  es: Primero gestores y vendedores sin código, después desarrolladores.

@@ -1,0 +1,12 @@
+key: cc-zero.m01
+slug: getting-started
+order: 1
+access: PUBLIC
+title:
+  en: How to use Claude Code
+  ru: Как пользоваться Claude Code
+  es: Cómo usar Claude Code
+summary:
+  en: Install, first task, CLAUDE.md, permission modes, context and cost. No programming required.
+  ru: Установка, первая задача, CLAUDE.md, режимы разрешений, контекст и стоимость. Без программирования.
+  es: Instalación, primera tarea, CLAUDE.md, modos de permisos, contexto y coste. Sin programar.

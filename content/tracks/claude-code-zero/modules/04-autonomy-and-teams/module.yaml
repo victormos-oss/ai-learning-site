@@ -1,0 +1,12 @@
+key: cc-zero.m04
+slug: autonomy-and-teams
+order: 4
+access: ACCOUNT
+title:
+  en: Autonomy and agent teams
+  ru: Автономия и команды агентов
+  es: Autonomía y equipos de agentes
+summary:
+  en: Scheduler, agent teams, MCP plugins, an integrated harness, workflows and the goal loop.
+  ru: Планировщик, команды агентов, плагины MCP, собранная обвязка, рабочие процессы и целевой цикл.
+  es: Planificador, equipos de agentes, plugins MCP, un arnés integrado, flujos de trabajo y el bucle de objetivos.

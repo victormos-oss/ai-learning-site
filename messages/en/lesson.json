@@ -1,0 +1,37 @@
+{
+  "breadcrumbs": "Breadcrumbs",
+  "tracks": "Tracks",
+  "toc": "In this lesson",
+  "minutes": "{count, plural, one {# minute} other {# minutes}}",
+  "module": "Module {order}",
+  "lessonNumber": "Lesson {order}",
+  "fallback": {
+    "title": "This lesson is available in English for now",
+    "body": "The translation is in progress. The original text is shown below."
+  },
+  "nav": {
+    "label": "Lesson navigation",
+    "prev": "Previous lesson",
+    "next": "Next lesson",
+    "backToTrack": "Back to the track"
+  },
+  "attribution": {
+    "heading": "Source and license",
+    "adapted": "Adapted from",
+    "translated": "Translated from",
+    "quoted": "Quotes",
+    "original": "Original material by",
+    "license": "License",
+    "viewSource": "Original on GitHub"
+  },
+  "code": {
+    "copy": "Copy code",
+    "copied": "Copied",
+    "file": "File",
+    "regionLabel": "Code: {language}",
+    "openSource": "Open the original file on GitHub"
+  },
+  "figure": {
+    "englishOnly": "Diagram labels are in English."
+  }
+}

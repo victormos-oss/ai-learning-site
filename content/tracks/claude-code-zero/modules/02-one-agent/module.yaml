@@ -1,0 +1,12 @@
+key: cc-zero.m02
+slug: one-agent
+order: 2
+access: ACCOUNT
+title:
+  en: "One agent: loop, tools, control"
+  ru: "Один агент: цикл, инструменты, контроль"
+  es: "Un agente: bucle, herramientas, control"
+summary:
+  en: How a coding agent works inside, built step by step in Python.
+  ru: Как устроен агент для кода изнутри, шаг за шагом на Python.
+  es: Cómo funciona por dentro un agente de código, paso a paso en Python.

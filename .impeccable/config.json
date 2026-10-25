@@ -1,3 +1,45 @@
 {
-  "buildPath": "code"
+  "buildPath": "code",
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "wide-tracking",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/assigned.html"
+        ],
+        "createdAt": "2026-10-25T18:52:04.534Z",
+        "reason": "main agent: decision-round sketch from the spent hand, not shipped; uppercase label tracking is intentional in the sketch"
+      },
+      {
+        "rule": "wide-tracking",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/challenger-sampler.html"
+        ],
+        "createdAt": "2026-10-25T18:52:05.540Z",
+        "reason": "main agent: decision-round sketch from the spent hand, not shipped; uppercase label tracking is intentional in the sketch"
+      },
+      {
+        "rule": "wide-tracking",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/challenger-coptic.html"
+        ],
+        "createdAt": "2026-10-25T18:52:06.442Z",
+        "reason": "main agent: decision-round sketch from the spent hand, not shipped; uppercase label tracking is intentional in the sketch"
+      },
+      {
+        "rule": "wide-tracking",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/canon.html"
+        ],
+        "createdAt": "2026-10-25T18:52:07.669Z",
+        "reason": "main agent: decision-round sketch from the spent hand, not shipped; uppercase label tracking is intentional in the sketch"
+      }
+    ]
+  }
 }

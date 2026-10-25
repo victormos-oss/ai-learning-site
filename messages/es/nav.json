@@ -1,0 +1,16 @@
+{
+  "main": "Navegación principal",
+  "tracks": "Rutas",
+  "videos": "Vídeos",
+  "practice": "Práctica",
+  "progress": "Mi progreso",
+  "about": "Autor",
+  "skipToContent": "Saltar al contenido",
+  "language": "Idioma",
+  "theme": {
+    "label": "Tema",
+    "system": "Sistema",
+    "light": "Claro",
+    "dark": "Oscuro"
+  }
+}
