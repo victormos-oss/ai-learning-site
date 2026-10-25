@@ -18,10 +18,18 @@ describe("alignForFlip", () => {
 });
 
 describe("planFlip", () => {
-  it("keeps cells that do not change still", () => {
-    const plan = planFlip("AB", "AC");
+  it("keeps unchanged cells still and plans intermediate flaps for far jumps", () => {
+    const plan = planFlip("AB", "AZ");
     expect(plan[0]?.steps).toEqual([]);
+    expect(plan[0]?.from).toBe(plan[0]?.to);
     expect(plan[1]?.steps.length).toBeGreaterThan(0);
+    expect(plan[1]?.to).toBe("Z");
+  });
+
+  it("flips adjacent letters directly without intermediate steps", () => {
+    const plan = planFlip("AB", "AC");
+    expect(plan[1]?.steps).toEqual([]);
+    expect(plan[1]?.from).not.toBe(plan[1]?.to);
   });
 
   it("caps the intermediate steps per cell", () => {

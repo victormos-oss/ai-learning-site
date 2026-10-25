@@ -17,7 +17,8 @@ import {
 
 const CONTENT_ROOT = "content/tracks";
 const CODE_EXTENSIONS = new Set([".py", ".ts", ".js", ".json", ".sh", ".md"]);
-const SHIKI_THEMES = { light: "github-light", dark: "github-dark" } as const;
+/* The code surface is dark in both site themes, so one dark Shiki theme is enough. */
+const SHIKI_THEME = "github-dark";
 const LANGUAGE_BY_EXTENSION: Record<string, string> = {
   ".py": "python",
   ".ts": "typescript",
@@ -66,8 +67,7 @@ async function readCodeFiles(
       const ext = name.slice(name.lastIndexOf("."));
       const html = await codeToHtml(content, {
         lang: LANGUAGE_BY_EXTENSION[ext] ?? "text",
-        themes: SHIKI_THEMES,
-        defaultColor: false,
+        theme: SHIKI_THEME,
       });
       return [name, { content, html }] as const;
     }),
@@ -119,7 +119,7 @@ const lessons = defineCollection({
       remarkPlugins: [remarkGfm],
       rehypePlugins: [
         rehypeSlug,
-        [rehypeShiki, { themes: SHIKI_THEMES, defaultColor: false }],
+        [rehypeShiki, { theme: SHIKI_THEME }],
       ],
     });
     const headings = [...doc.content.matchAll(/^##\s+(.+)$/gm)].map((m) => m[1] ?? "");

@@ -74,7 +74,7 @@ export default async function TrackPage({ params }: Props) {
                 </p>
               )}
               {moduleLessons.length === 0 ? (
-                <p className="mt-3 text-sm text-ink-muted">…</p>
+                <p className="mt-3 text-sm text-ink-muted">{t("comingSoon")}</p>
               ) : (
                 <ol className="mt-4 divide-y divide-paper-line border-y border-paper-line">
                   {moduleLessons.map((lesson, index) => (
