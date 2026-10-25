@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Открытый переплёт</title>
+<style>
+  :root{--paper:#f2ede2;--wood:#8a6a45;--thread:#e6dcc3;--ink:#3a2f25;--oak:#b8936a}
+  *{box-sizing:border-box;margin:0}
+  html,body{width:1440px;height:900px;overflow:hidden;background:#d8cfbf;color:var(--ink);font-family:Georgia,"Times New Roman",serif}
+  .book{position:relative;width:1440px;height:900px;display:grid;grid-template-columns:1fr 1fr;background:var(--paper)}
+  .spine{position:absolute;left:0;right:0;top:0;height:72px;background:var(--wood);display:flex;align-items:center;justify-content:center;gap:0}
+  .spine .link{width:48px;height:22px;border:3px solid var(--thread);border-radius:11px;margin:0 -6px;background:transparent}
+  .spine .link.done{background:var(--thread)}
+  .spine .lab{position:absolute;left:40px;color:var(--thread);font-size:14px;letter-spacing:.2em;text-transform:uppercase;font-family:"Helvetica Neue",Arial,sans-serif}
+  .spine .langs{position:absolute;right:40px;color:var(--thread);font-size:14px;letter-spacing:.2em;font-family:"Helvetica Neue",Arial,sans-serif}
+  .gutter{position:absolute;left:719px;top:72px;bottom:0;width:2px;background:linear-gradient(90deg,rgba(0,0,0,.18),rgba(0,0,0,.02))}
+  .page{padding:120px 72px 60px}
+  .page.l{padding-right:60px}
+  .kicker{font-family:"Helvetica Neue",Arial,sans-serif;font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:#4e4134}
+  h1{margin-top:12px;font-size:56px;line-height:1.05;font-weight:400;letter-spacing:.02em}
+  .toc{margin-top:36px;list-style:none;font-size:20px;line-height:2}
+  .toc li{display:flex;justify-content:space-between;border-bottom:1px dotted #b8a88f}
+  .toc li span:last-child{font-family:"Helvetica Neue",Arial,sans-serif;font-size:14px;letter-spacing:.1em;color:#4e4134}
+  .page.r h2{font-size:40px;font-weight:400;line-height:1.1;margin-top:12px}
+  .page.r p{margin-top:24px;font-size:20px;line-height:1.55;max-width:520px}
+  .cta{display:inline-block;margin-top:40px;padding:18px 36px;background:linear-gradient(180deg,#7a5a3a,#5a4430);color:#faf5ea;font-family:"Helvetica Neue",Arial,sans-serif;font-size:16px;letter-spacing:.2em;text-transform:uppercase;border-radius:3px;box-shadow:0 2px 0 #5a4430}
+  .foot{position:absolute;left:72px;right:72px;bottom:26px;display:flex;justify-content:space-between;font-family:"Helvetica Neue",Arial,sans-serif;font-size:13px;letter-spacing:.08em;color:#4e4134}
+  .spine .lab,.spine .langs{color:#faf5ea}
+</style>
+</head>
+<body>
+<div class="book">
+  <div class="spine">
+    <span class="lab">learn.vdmitriev.com</span>
+    <span class="link done"></span><span class="link done"></span><span class="link"></span><span class="link"></span><span class="link"></span><span class="link"></span><span class="link"></span><span class="link"></span><span class="link"></span><span class="link"></span><span class="link"></span><span class="link"></span><span class="link"></span><span class="link"></span><span class="link"></span><span class="link"></span><span class="link"></span><span class="link"></span><span class="link"></span><span class="link"></span><span class="link"></span><span class="link"></span><span class="link"></span>
+    <span class="langs">RU · EN · ES</span>
+  </div>
+  <div class="gutter"></div>
+  <div class="page l">
+    <div class="kicker">Трек 1 · 4 модуля · 23 урока</div>
+    <h1>Claude Code<br>с нуля</h1>
+    <ul class="toc">
+      <li><span>Установка и первая задача</span><span>Модуль 1</span></li>
+      <li><span>CLAUDE.md и режимы разрешений</span><span>Модуль 1</span></li>
+      <li><span>Практика: лендинг за вечер</span><span>Проверка</span></li>
+      <li><span>Цикл агента и инструменты</span><span>Модуль 2</span></li>
+      <li><span>Хуки, субагенты, память</span><span>Модуль 3</span></li>
+      <li><span>MCP и команды агентов</span><span>Модуль 4</span></li>
+    </ul>
+  </div>
+  <div class="page r">
+    <div class="kicker">Урок 1 · 15 минут · без регистрации</div>
+    <h2>Установка Claude Code и первый разговор с терминалом</h2>
+    <p>Ничего не спрятано: каждый урок показывает источник, лицензию и коммит, из которого он собран. Стежки на корешке это ваш прогресс по модулям, он остаётся в вашем браузере.</p>
+    <a class="cta" href="#">Открыть урок 1</a>
+  </div>
+  <div class="foot"><span>Автор Виктор Дмитриев, продавец, который строит продукты через Claude Code</span><span>Источники MIT · Telegram @prodmastermos</span></div>
+</div>
+</body>
+</html>

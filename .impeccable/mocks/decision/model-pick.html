@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Схема линий</title>
+<style>
+  :root{--paper:#f7f7f4;--ink:#1a1a1a;--line:#c8102e;--grey:#8c8c8c}
+  *{box-sizing:border-box;margin:0}
+  html,body{width:1440px;height:900px;overflow:hidden;background:var(--paper);color:var(--ink);font-family:"Helvetica Neue",Arial,sans-serif}
+  .page{position:relative;width:1440px;height:900px}
+  .nav{display:flex;justify-content:space-between;align-items:center;height:64px;padding:0 56px;font-size:15px;font-weight:700;letter-spacing:.02em}
+  .nav .langs span{display:inline-block;width:34px;height:34px;line-height:34px;text-align:center;border:2px solid var(--ink);border-radius:50%;margin-left:6px}
+  .nav .langs span.on{background:var(--line);border-color:var(--line);color:#fff}
+  .legend{position:absolute;left:56px;top:110px;width:520px}
+  .legend .num{display:inline-block;width:72px;height:72px;line-height:72px;text-align:center;border-radius:50%;background:var(--line);color:#fff;font-size:40px;font-weight:800;vertical-align:middle;margin-right:18px}
+  .legend h1{display:inline-block;vertical-align:middle;font-size:44px;line-height:1;font-weight:800;letter-spacing:-.01em}
+  .legend p{margin-top:22px;font-size:20px;line-height:1.4;color:#333;max-width:460px}
+  .legend .cta{display:inline-block;margin-top:28px;padding:18px 28px;background:var(--ink);color:#fff;font-size:20px;font-weight:700;border-radius:999px}
+  svg{position:absolute;inset:0}
+  .st{font:700 20px/1 "Helvetica Neue",Arial,sans-serif;fill:var(--ink)}
+  .st2{font:400 14px/1 "Helvetica Neue",Arial,sans-serif;fill:var(--grey)}
+  .big{font:800 26px/1 "Helvetica Neue",Arial,sans-serif;fill:var(--ink)}
+  .foot{position:absolute;left:56px;right:56px;bottom:24px;display:flex;justify-content:space-between;font-size:14px;color:#555}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="nav">
+    <div>learn.vdmitriev.com</div>
+    <div>Треки &nbsp;&nbsp; Видео &nbsp;&nbsp; Практика &nbsp;&nbsp; Автор</div>
+    <div class="langs"><span class="on">RU</span><span>EN</span><span>ES</span></div>
+  </div>
+
+  <svg viewBox="0 0 1440 900" width="1440" height="900" aria-hidden="true">
+    <polyline points="640,800 900,800 1020,680 1240,680 1360,560 1360,180" fill="none" stroke="#c8102e" stroke-width="26" stroke-linejoin="round" stroke-linecap="round"/>
+    <polyline points="1020,680 1020,460" fill="none" stroke="#8c8c8c" stroke-width="12" stroke-linecap="round"/>
+    <g fill="#fff" stroke="#1a1a1a" stroke-width="5">
+      <circle cx="640" cy="800" r="16"/><circle cx="780" cy="800" r="16"/><circle cx="900" cy="800" r="16"/>
+      <circle cx="1130" cy="680" r="16"/><circle cx="1240" cy="680" r="16"/>
+      <circle cx="1360" cy="440" r="16"/><circle cx="1360" cy="300" r="16"/><circle cx="1360" cy="180" r="16"/>
+    </g>
+    <g fill="#fff" stroke="#1a1a1a" stroke-width="7"><circle cx="1020" cy="680" r="30"/></g>
+    <circle cx="640" cy="800" r="26" fill="none" stroke="#c8102e" stroke-width="4"/>
+    <text class="st" x="616" y="846">Установка</text><text class="st2" x="616" y="866">Setup</text>
+    <text class="st" x="740" y="846">Первая задача</text><text class="st2" x="740" y="866">First task</text>
+    <text class="st" x="880" y="846">CLAUDE.md</text><text class="st2" x="880" y="866">CLAUDE.md</text>
+    <text class="big" x="900" y="640">Практика: лендинг</text><text class="st2" x="900" y="662">Practice · пересадка на модуль 2</text>
+    <text class="st" x="1100" y="726">Разрешения</text><text class="st2" x="1100" y="746">Permissions</text>
+    <text class="st" x="1210" y="726">Хуки</text><text class="st2" x="1210" y="746">Hooks</text>
+    <text class="st" x="1130" y="446">Цикл агента</text><text class="st2" x="1130" y="466">Agent loop</text>
+    <text class="st" x="1150" y="306">Субагенты</text><text class="st2" x="1150" y="326">Subagents</text>
+    <text class="st" x="1240" y="186">MCP</text><text class="st2" x="1240" y="206">Конечная · Terminus</text>
+  </svg>
+
+  <div class="legend">
+    <span class="num">1</span><h1>Claude Code<br>с нуля</h1>
+    <p>Линия из 23 станций: от установки до собственного агента. Пересадки это практика в терминале с проверкой. Прогресс остаётся в вашем браузере, регистрация не нужна.</p>
+    <a class="cta" href="#">Начать с первой станции</a>
+  </div>
+
+  <div class="foot">
+    <div>Автор Виктор Дмитриев, продавец, который строит продукты через Claude Code</div>
+    <div>Источники MIT · Telegram @prodmastermos</div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Табло отправлений</title>
+<style>
+  :root{--board:#23262b;--rail:#9ea3a8;--flap:#ece6d6;--ink:#15171a;--amber:#e0a526;--dim:#6d7177}
+  *{box-sizing:border-box;margin:0}
+  html,body{width:1440px;height:900px;overflow:hidden;background:var(--board);color:var(--flap);font-family:"Roboto Condensed","Arial Narrow","Helvetica Neue",Arial,sans-serif}
+  .board{position:relative;width:1440px;height:900px;padding:0 56px;background:
+    linear-gradient(180deg,#2a2d33 0,#23262b 60px,#1f2226 100%)}
+  .rail{display:flex;align-items:center;justify-content:space-between;height:64px;margin:0 -56px;padding:0 56px;background:linear-gradient(180deg,#b3b7bc,#8f949a);color:#15171a;font-size:14px;letter-spacing:.12em;text-transform:uppercase}
+  .rail .brand{font-weight:700;font-size:18px;letter-spacing:.06em;text-transform:none}
+  .flag{display:flex;gap:6px}
+  .f{display:inline-block;position:relative;background:var(--flap);color:var(--ink);font-weight:700;text-align:center;border-radius:3px;box-shadow:0 2px 0 #0b0c0e,inset 0 -1px 0 rgba(0,0,0,.25)}
+  .f::after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;background:#0b0c0e;opacity:.55}
+  .flag .f{width:44px;height:30px;line-height:30px;font-size:16px}
+  .flag .f.on{background:var(--amber)}
+  .title{display:flex;gap:8px;margin-top:48px;flex-wrap:nowrap}
+  .title .f{width:66px;height:112px;line-height:112px;font-size:84px;letter-spacing:0}
+  .title .sp{width:30px;background:transparent;box-shadow:none}
+  .title .sp::after{display:none}
+  .sub{margin-top:14px;font-size:20px;letter-spacing:.14em;text-transform:uppercase;color:#b9bcc0}
+  .head{display:grid;grid-template-columns:90px 1fr 170px 250px;gap:18px;margin-top:40px;padding:0 10px 10px;border-bottom:2px solid #3a3e45;font-size:14px;letter-spacing:.16em;text-transform:uppercase;color:#8c9096}
+  .row{display:grid;grid-template-columns:90px 1fr 170px 250px;gap:18px;align-items:center;padding:12px 10px;border-bottom:1px solid #2f3339}
+  .row .n .f,.row .name .f,.row .dur .f,.row .st .f{height:40px;line-height:40px;font-size:26px}
+  .row .n .f{width:68px}
+  .row .name{display:flex;gap:4px}
+  .row .name .f{width:30px;font-size:24px}
+  .row .name .f.g{width:14px;background:transparent;box-shadow:none}
+  .row .name .f.g::after{display:none}
+  .row .dur .f{width:110px;font-size:22px}
+  .row .st .f{width:230px;font-size:18px;letter-spacing:.1em}
+  .row.next .st .f{background:var(--amber)}
+  .row.done .st .f{background:#cfc9b9;color:#5b5a55}
+  .row.next{outline:2px solid var(--amber);outline-offset:-2px;border-radius:4px}
+  .foot{position:absolute;left:56px;right:56px;bottom:22px;display:flex;justify-content:space-between;font-size:14px;color:#8c9096;letter-spacing:.06em}
+</style>
+</head>
+<body>
+<div class="board">
+  <div class="rail">
+    <div class="brand">learn.vdmitriev.com</div>
+    <div>Треки · Видео · Практика · Автор</div>
+    <div class="flag"><span class="f on">RU</span><span class="f">EN</span><span class="f">ES</span></div>
+  </div>
+
+  <div class="title">
+    <span class="f">C</span><span class="f">L</span><span class="f">A</span><span class="f">U</span><span class="f">D</span><span class="f">E</span>
+    <span class="f sp"></span>
+    <span class="f">C</span><span class="f">O</span><span class="f">D</span><span class="f">E</span>
+    <span class="f sp"></span>
+    <span class="f">С</span><span class="f"> </span><span class="f">Н</span><span class="f">У</span><span class="f">Л</span><span class="f">Я</span>
+  </div>
+  <div class="sub">Трек 1 · 4 модуля · 23 урока · для менеджеров и разработчиков · без регистрации</div>
+
+  <div class="head"><div>Урок</div><div>Название</div><div>Время</div><div>Статус</div></div>
+
+  <div class="row next">
+    <div class="n"><span class="f">01</span></div>
+    <div class="name"><span class="f">У</span><span class="f">С</span><span class="f">Т</span><span class="f">А</span><span class="f">Н</span><span class="f">О</span><span class="f">В</span><span class="f">К</span><span class="f">А</span><span class="f g"></span><span class="f">C</span><span class="f">L</span><span class="f">A</span><span class="f">U</span><span class="f">D</span><span class="f">E</span><span class="f g"></span><span class="f">C</span><span class="f">O</span><span class="f">D</span><span class="f">E</span></div>
+    <div class="dur"><span class="f">15 МИН</span></div>
+    <div class="st"><span class="f">ОТПРАВЛЯЕТСЯ · НАЧАТЬ</span></div>
+  </div>
+  <div class="row">
+    <div class="n"><span class="f">02</span></div>
+    <div class="name"><span class="f">П</span><span class="f">Е</span><span class="f">Р</span><span class="f">В</span><span class="f">А</span><span class="f">Я</span><span class="f g"></span><span class="f">З</span><span class="f">А</span><span class="f">Д</span><span class="f">А</span><span class="f">Ч</span><span class="f">А</span></div>
+    <div class="dur"><span class="f">20 МИН</span></div>
+    <div class="st"><span class="f">ПО РАСПИСАНИЮ</span></div>
+  </div>
+  <div class="row">
+    <div class="n"><span class="f">03</span></div>
+    <div class="name"><span class="f">C</span><span class="f">L</span><span class="f">A</span><span class="f">U</span><span class="f">D</span><span class="f">E</span><span class="f">.</span><span class="f">M</span><span class="f">D</span></div>
+    <div class="dur"><span class="f">25 МИН</span></div>
+    <div class="st"><span class="f">ПО РАСПИСАНИЮ</span></div>
+  </div>
+  <div class="row">
+    <div class="n"><span class="f">04</span></div>
+    <div class="name"><span class="f">Р</span><span class="f">Е</span><span class="f">Ж</span><span class="f">И</span><span class="f">М</span><span class="f">Ы</span><span class="f g"></span><span class="f">Р</span><span class="f">А</span><span class="f">З</span><span class="f">Р</span><span class="f">Е</span><span class="f">Ш</span><span class="f">Е</span><span class="f">Н</span><span class="f">И</span><span class="f">Й</span></div>
+    <div class="dur"><span class="f">20 МИН</span></div>
+    <div class="st"><span class="f">ПО РАСПИСАНИЮ</span></div>
+  </div>
+  <div class="row">
+    <div class="n"><span class="f">05</span></div>
+    <div class="name"><span class="f">П</span><span class="f">Р</span><span class="f">А</span><span class="f">К</span><span class="f">Т</span><span class="f">И</span><span class="f">К</span><span class="f">А</span><span class="f g"></span><span class="f">·</span><span class="f g"></span><span class="f">Л</span><span class="f">Е</span><span class="f">Н</span><span class="f">Д</span><span class="f">И</span><span class="f">Н</span><span class="f">Г</span></div>
+    <div class="dur"><span class="f">45 МИН</span></div>
+    <div class="st"><span class="f">ПО РАСПИСАНИЮ</span></div>
+  </div>
+  <div class="row">
+    <div class="n"><span class="f">06</span></div>
+    <div class="name"><span class="f">Ц</span><span class="f">И</span><span class="f">К</span><span class="f">Л</span><span class="f g"></span><span class="f">А</span><span class="f">Г</span><span class="f">Е</span><span class="f">Н</span><span class="f">Т</span><span class="f">А</span></div>
+    <div class="dur"><span class="f">30 МИН</span></div>
+    <div class="st"><span class="f">ПО РАСПИСАНИЮ</span></div>
+  </div>
+
+  <div class="foot">
+    <div>Автор: Виктор Дмитриев, продавец, который строит продукты через Claude Code</div>
+    <div>Источники MIT · авторство на каждом уроке · Telegram @prodmastermos</div>
+  </div>
+</div>
+</body>
+</html>

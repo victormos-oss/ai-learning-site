@@ -1,0 +1,134 @@
+# Глоссарий терминов для перевода и единообразия на трёх языках.
+# keep: не переводить ни в одном языке (имена продуктов, команды, файлы).
+# terms: канонический перевод; переводчик и линтер сверяются с этим списком.
+
+keep:
+  - Claude Code
+  - Claude
+  - Anthropic
+  - CLAUDE.md
+  - MCP
+  - Model Context Protocol
+  - API
+  - CLI
+  - JSON
+  - YAML
+  - Markdown
+  - MDX
+  - GitHub
+  - git
+  - npm
+  - Python
+  - TypeScript
+  - Node.js
+  - bash
+  - PowerShell
+  - settings.json
+  - .claude
+  - PreToolUse
+  - PostToolUse
+  - TodoWrite
+
+terms:
+  - en: agent
+    ru: агент
+    es: agente
+  - en: agent loop
+    ru: цикл агента
+    es: bucle del agente
+  - en: tool
+    ru: инструмент
+    es: herramienta
+  - en: tool use
+    ru: вызов инструмента
+    es: uso de herramientas
+  - en: tool call
+    ru: вызов инструмента
+    es: llamada a herramienta
+  - en: permission
+    ru: разрешение
+    es: permiso
+  - en: permission mode
+    ru: режим разрешений
+    es: modo de permisos
+  - en: hook
+    ru: хук
+    es: hook
+    note: "В русском и испанском не переводить, как устоявшийся термин."
+  - en: subagent
+    ru: субагент
+    es: subagente
+  - en: skill
+    ru: скил
+    es: skill
+    note: "В русском «скил» как в интерфейсе Claude Code; не «навык»."
+  - en: slash command
+    ru: слеш-команда
+    es: comando slash
+  - en: context window
+    ru: контекстное окно
+    es: ventana de contexto
+  - en: context compaction
+    ru: сжатие контекста
+    es: compactación del contexto
+  - en: memory
+    ru: память
+    es: memoria
+  - en: session
+    ru: сессия
+    es: sesión
+  - en: prompt
+    ru: промпт
+    es: prompt
+  - en: system prompt
+    ru: системный промпт
+    es: system prompt
+  - en: harness
+    ru: обвязка агента
+    es: arnés del agente
+    note: "Первое упоминание в уроке с пояснением «harness»."
+  - en: background task
+    ru: фоновая задача
+    es: tarea en segundo plano
+  - en: scheduler
+    ru: планировщик
+    es: planificador
+  - en: agent team
+    ru: команда агентов
+    es: equipo de agentes
+  - en: plugin
+    ru: плагин
+    es: plugin
+  - en: workflow
+    ru: рабочий процесс
+    es: flujo de trabajo
+  - en: worktree
+    ru: рабочее дерево git
+    es: worktree de git
+  - en: repository
+    ru: репозиторий
+    es: repositorio
+  - en: terminal
+    ru: терминал
+    es: terminal
+  - en: track
+    ru: трек
+    es: ruta
+  - en: module
+    ru: модуль
+    es: módulo
+  - en: lesson
+    ru: урок
+    es: lección
+  - en: quiz
+    ru: квиз
+    es: cuestionario
+  - en: practice
+    ru: практика
+    es: práctica
+  - en: progress
+    ru: прогресс
+    es: progreso
+  - en: checker
+    ru: проверка
+    es: comprobador

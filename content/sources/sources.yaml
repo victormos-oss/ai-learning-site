@@ -1,0 +1,139 @@
+# Реестр источников контента.
+# use: adapt  = текст перерабатывается и переводится, блок авторства обязателен
+# use: quote  = только короткие цитаты через <DocQuote href>, линтер ограничивает длину
+# use: link   = импорт запрещён, только ссылка на страницах «Ресурсы»
+# local: путь к клону относительно C:\Users\victo\Downloads\ai-learning-sources
+# Закреплённые коммиты и хеши файлов живут в sources.lock.json, его пишет content:import --apply.
+
+sources:
+  - id: learn-claude-code
+    name: learn-claude-code
+    url: https://github.com/shareAI-lab/learn-claude-code
+    local: shareAI-lab_learn-claude-code
+    license: MIT
+    authors: shareAI-lab contributors
+    copyright: "Copyright (c) shareAI-lab"
+    use: adapt
+    include:
+      - "s[0-9][0-9]_*/README.md"
+      - "s[0-9][0-9]_*/code.py"
+      - "s[0-9][0-9]_*/images/*"
+    exclude:
+      - "docs/**"
+      - "agents/**"
+      - "tests/**"
+      - "web/**"
+      - "skills/**"
+    languages: [en, zh, ja]
+    notes: "Папки sNN_* это актуальная нумерация. docs/ и agents/ со старой нумерацией s01–s12 не импортировать."
+
+  - id: cc-best-practices-usman
+    name: claude-code-best-practices (MuhammadUsmanGM)
+    url: https://github.com/MuhammadUsmanGM/claude-code-best-practices
+    local: MuhammadUsmanGM_claude-code-best-practices
+    license: MIT
+    authors: Muhammad Usman and contributors
+    copyright: "Copyright (c) Muhammad Usman"
+    use: adapt
+    include:
+      - "guides/*.md"
+      - "examples/**"
+      - "starters/**"
+    exclude:
+      - "benchmarks/**"
+      - "plugins/**"
+      - "tools/**"
+      - "awesome.md"
+    languages: [en]
+    notes: "Основа модуля 1. Проверять утверждения против официальной доки при каждом импорте."
+
+  - id: cc-best-practices-awattar
+    name: claude-code-best-practices (awattar)
+    url: https://github.com/awattar/claude-code-best-practices
+    local: awattar_claude-code-best-practices
+    license: MIT
+    authors: awattar
+    copyright: "Copyright (c) awattar"
+    use: adapt
+    include:
+      - "README.md"
+      - "CLAUDE.md"
+    languages: [en]
+    notes: "Последний коммит май 2026, сверять с актуальной докой."
+
+  - id: anthropic-docs
+    name: Официальная документация Claude Code
+    url: https://code.claude.com/docs
+    local: anthropic_official-docs
+    license: proprietary
+    authors: Anthropic
+    copyright: "© Anthropic PBC"
+    use: quote
+    quote_limits:
+      max_words_per_quote: 80
+      max_quote_share: 0.15
+    languages: [en]
+    notes: "Снимок по llms.txt. Только <DocQuote href> со ссылкой на страницу."
+
+  - id: ai-engineering-from-scratch
+    name: ai-engineering-from-scratch
+    url: https://github.com/rohitg00/ai-engineering-from-scratch
+    local: rohitg00_ai-engineering-from-scratch
+    license: MIT
+    authors: Rohit Ghumare and contributors
+    copyright: "Copyright (c) Rohit Ghumare"
+    use: adapt
+    enabled: false
+    include:
+      - "phases/*/*/docs/en.md"
+      - "phases/*/*/quiz.json"
+      - "phases/*/*/code/*"
+      - "phases/*/*/assets/*"
+    languages: [en]
+    notes: "Трек «AI-инженерия», v2. Включить после первого трека."
+
+  - id: ossu-computer-science
+    name: OSSU Computer Science
+    url: https://github.com/ossu/computer-science
+    local: ossu_computer-science
+    license: MIT
+    authors: Open Source Society University
+    use: link
+    enabled: false
+
+  - id: ossu-math
+    name: OSSU Math
+    url: https://github.com/ossu/math
+    local: ossu_math
+    license: MIT
+    authors: Open Source Society University
+    use: link
+    enabled: false
+
+  - id: ossu-data-science
+    name: OSSU Data Science
+    url: https://github.com/ossu/data-science
+    local: ossu_data-science
+    license: CC-BY-SA-4.0
+    authors: Open Source Society University
+    use: link
+    enabled: false
+    notes: "При адаптации текста производное обязано быть под CC BY-SA."
+
+  - id: claude-code-everyone-course
+    name: Claude Code for Everyone
+    url: https://github.com/carlvellotti/claude-code-everyone-course
+    local: carlvellotti_claude-code-everyone-course
+    license: none
+    authors: Carl Vellotti
+    use: link
+    notes: "Нет лицензии: все права у автора. Только ссылка, пока нет письменного разрешения."
+
+  - id: awesome-claude-code
+    name: Awesome Claude Code
+    url: https://github.com/hesreallyhim/awesome-claude-code
+    local: hesreallyhim_awesome-claude-code
+    license: CC-BY-NC-ND-4.0
+    authors: hesreallyhim
+    use: link
+    notes: "Запрет коммерческого использования и переработки."

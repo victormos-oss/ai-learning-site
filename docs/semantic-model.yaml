@@ -1,0 +1,255 @@
+# Семантическая модель сайта обучения AI
+# Создано 2026-10-25. Сущности, измерения и метрики для продукта и аналитики после запуска.
+# Источник данных: PostgreSQL проекта (Prisma). Имена таблиц предварительные, уточняются в architecture.md.
+
+entities:
+  - name: user
+    description: "Зарегистрированный ученик. Один ряд на аккаунт."
+    type: primary
+    expr: users.id
+    meta:
+      source: users
+      notes: "Поля: email, locale (ru|en|es), is_premium, created_at. Премиум в v1 выдаётся вручную."
+
+  - name: track
+    description: "Учебный трек, например «Claude Code с нуля». Один ряд на трек."
+    type: primary
+    expr: tracks.id
+    meta:
+      source: tracks
+      notes: "Контент в MDX, в БД только slug, порядок и флаг published."
+
+  - name: module
+    description: "Модуль внутри трека. Первый модуль каждого трека бесплатный."
+    type: primary
+    expr: modules.id
+    meta:
+      source: modules
+      notes: "Поля: track_id, order, is_free."
+
+  - name: lesson
+    description: "Урок внутри модуля. Индекс MDX-файла: slug, порядок, флаг премиум, источник и лицензия."
+    type: primary
+    expr: lessons.id
+    meta:
+      source: lessons
+      notes: "Поля: module_id, slug, order, is_premium, source_repo, source_path, source_license, source_commit."
+
+  - name: progress
+    description: "Факт прохождения урока учеником. Один ряд на пару ученик и урок."
+    type: primary
+    expr: progress.id
+    meta:
+      source: progress
+      notes: "Поля: user_id, lesson_id, status (started|completed), completed_at."
+
+  - name: quiz_attempt
+    description: "Попытка пройти квиз урока. Один ряд на попытку."
+    type: primary
+    expr: quiz_attempts.id
+    meta:
+      source: quiz_attempts
+      notes: "Поля: user_id, lesson_id, score, max_score, passed, created_at."
+
+  - name: practice_submission
+    description: "Результат практического задания в Claude Code. Один ряд на отправку."
+    type: primary
+    expr: practice_submissions.id
+    meta:
+      source: practice_submissions
+      notes: "Поля: user_id, lesson_id, check_passed, check_log, created_at."
+
+  - name: lead
+    description: "Контакт, оставленный через форму рассылки или заявку на консалтинг. Один ряд на отправку формы."
+    type: primary
+    expr: leads.id
+    meta:
+      source: leads
+      notes: "Поля: email, kind (newsletter|consulting), locale, source_page, user_id (nullable), created_at."
+
+  - name: premium_grant
+    description: "Выдача премиум-доступа вручную или по промокоду. Один ряд на выдачу."
+    type: primary
+    expr: premium_grants.id
+    meta:
+      source: premium_grants
+      notes: "Поля: user_id, granted_by, reason, starts_at, ends_at."
+
+  - name: webinar
+    description: "Вебинар или запись видео. Один ряд на событие."
+    type: primary
+    expr: webinars.id
+    meta:
+      source: webinars
+      notes: "Поля: title по языкам, video_url, starts_at, is_recording, locale."
+
+dimensions:
+  - name: locale
+    description: "Язык интерфейса и контента: ru, en, es."
+    type: categorical
+    expr: users.locale
+
+  - name: track_slug
+    description: "Идентификатор трека для группировки прогресса и лидов."
+    type: categorical
+    expr: tracks.slug
+
+  - name: module_is_free
+    description: "Бесплатный модуль или за аккаунтом. Разделяет воронку на открытую и закрытую части."
+    type: categorical
+    expr: modules.is_free
+
+  - name: user_is_premium
+    description: "Есть ли у ученика действующий премиум на момент события."
+    type: categorical
+    expr: users.is_premium
+
+  - name: lead_kind
+    description: "Тип лида: рассылка или заявка на консалтинг."
+    type: categorical
+    expr: leads.kind
+
+  - name: event_date
+    description: "Дата события для временных рядов."
+    type: time
+    expr: created_at
+    type_params:
+      time_granularity: day
+
+metrics:
+  - name: registered_users
+    description: "Число аккаунтов, созданных за период. Показывает рост базы учеников."
+    label: "Регистрации"
+    type: simple
+    type_params:
+      measure:
+        name: users_count
+    meta:
+      owner: "Виктор Дмитриев"
+      data_source: "users"
+      grain: "один ряд на пользователя, агрегируется по дню"
+      business_context: >
+        Главная метрика роста бренда. Используется для оценки лендинга и каналов трафика.
+      calculation_notes: "COUNT(users.id) WHERE created_at в периоде. Удалённые аккаунты не считаем."
+
+  - name: active_learners
+    description: "Ученики, завершившие хотя бы один урок за последние 7 дней."
+    label: "Активные ученики, 7 дней"
+    type: simple
+    type_params:
+      measure:
+        name: active_users_7d
+    meta:
+      owner: "Виктор Дмитриев"
+      data_source: "progress"
+      grain: "один ряд на пользователя за окно 7 дней"
+      business_context: >
+        Показывает, живёт ли продукт после регистрации. Решение: что улучшать в уроках и напоминаниях.
+      calculation_notes: "COUNT(DISTINCT progress.user_id) WHERE status = 'completed' AND completed_at >= now() - 7 days."
+
+  - name: lesson_completion_rate
+    description: "Доля начатых уроков, которые ученики завершили."
+    label: "Завершение уроков"
+    type: ratio
+    type_params:
+      numerator: completed_lessons
+      denominator: started_lessons
+    meta:
+      owner: "Виктор Дмитриев"
+      data_source: "progress"
+      grain: "агрегат по уроку или треку за период"
+      business_context: >
+        Находит уроки, где ученики бросают. Решение: переписать урок, разбить, добавить практику.
+      calculation_notes: "completed / (started + completed). Считать по урокам и по модулям отдельно для бесплатной и закрытой части."
+      good_value_range: "> 60% хорошо; < 30% урок нужно переделать"
+
+  - name: track_completion_rate
+    description: "Доля зарегистрированных учеников, завершивших все уроки трека."
+    label: "Завершение трека"
+    type: ratio
+    type_params:
+      numerator: users_completed_track
+      denominator: users_started_track
+    meta:
+      owner: "Виктор Дмитриев"
+      data_source: "progress, lessons, modules"
+      grain: "один ряд на трек за период"
+      business_context: >
+        Главная метрика ценности курса. Нужна для решения о запуске платной версии.
+      calculation_notes: "Ученик завершил трек, если completed для всех published уроков трека. Начал, если завершил хотя бы один урок."
+
+  - name: free_to_account_conversion
+    description: "Доля посетителей бесплатного модуля, которые создали аккаунт."
+    label: "Конверсия в аккаунт"
+    type: ratio
+    type_params:
+      numerator: registered_users
+      denominator: free_module_visitors
+    meta:
+      owner: "Виктор Дмитриев"
+      data_source: "users, веб-аналитика (page views бесплатного модуля)"
+      grain: "агрегат за период"
+      business_context: >
+        Проверяет границу фримиума. Решение: больше или меньше открывать бесплатно.
+      calculation_notes: "Знаменатель из веб-аналитики без cookies (например, Plausible или Umami на VPS2), уникальные посетители страниц is_free модулей."
+
+  - name: lead_rate
+    description: "Лиды на тысячу уникальных посетителей за период, отдельно по типу лида."
+    label: "Лиды на 1000 посетителей"
+    type: ratio
+    type_params:
+      numerator: leads_count
+      denominator: unique_visitors_thousands
+    meta:
+      owner: "Виктор Дмитриев"
+      data_source: "leads, веб-аналитика"
+      grain: "агрегат за период, разрез по lead_kind и locale"
+      business_context: >
+        Основная цель v1: лиды на консалтинг и рассылку. Решение: куда ставить формы и какие тексты работают.
+      calculation_notes: "Дубли по email за период считать один раз."
+
+  - name: quiz_pass_rate
+    description: "Доля попыток квиза, набравших проходной балл."
+    label: "Прохождение квизов"
+    type: ratio
+    type_params:
+      numerator: quiz_attempts_passed
+      denominator: quiz_attempts_total
+    meta:
+      owner: "Виктор Дмитриев"
+      data_source: "quiz_attempts"
+      grain: "агрегат по уроку за период"
+      business_context: >
+        Проверяет качество урока и квиза. Очень низкий процент означает плохой урок или плохой вопрос.
+      calculation_notes: "passed = score / max_score >= 0.7. Порог задаётся в quiz.json урока."
+      good_value_range: "50–85% нормально; > 95% квиз слишком простой"
+
+  - name: practice_check_pass_rate
+    description: "Доля отправок практических заданий, прошедших автопроверку."
+    label: "Прохождение практики"
+    type: ratio
+    type_params:
+      numerator: practice_passed
+      denominator: practice_submissions_total
+    meta:
+      owner: "Виктор Дмитриев"
+      data_source: "practice_submissions"
+      grain: "агрегат по уроку за период"
+      business_context: >
+        Показывает, работает ли формат практики в Claude Code. Решение: упростить задание или проверку.
+      calculation_notes: "Повторные отправки одного ученика считаем каждую. Отдельно смотреть долю учеников с хотя бы одной успешной отправкой."
+
+  - name: premium_users
+    description: "Число учеников с действующим премиум-доступом на дату."
+    label: "Премиум-ученики"
+    type: simple
+    type_params:
+      measure:
+        name: premium_users_count
+    meta:
+      owner: "Виктор Дмитриев"
+      data_source: "premium_grants"
+      grain: "снимок на дату"
+      business_context: >
+        В v1 выдаётся вручную, метрика нужна для решения о запуске биллинга во v2.
+      calculation_notes: "COUNT(DISTINCT user_id) WHERE starts_at <= date AND (ends_at IS NULL OR ends_at > date)."
