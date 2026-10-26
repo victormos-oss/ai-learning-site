@@ -13,6 +13,7 @@ import { rewriteImages, type AssetRef } from "./rewrite-images";
 import { rewriteLinks } from "./rewrite-links";
 import { stripHtmlComments } from "./strip-html-comments";
 import { stripLangBar } from "./strip-lang-bar";
+import { stripLeadingRules } from "./strip-leading-rules";
 import { stripNavChain } from "./strip-nav-chain";
 import { stripNextArrow } from "./strip-next-arrow";
 
@@ -80,7 +81,7 @@ export function transformLesson(input: TransformInput): TransformResult {
     stripNavChain(stripLangBar(stripHtmlComments(parseMarkdown(input.markdown)))),
   );
   const titled = extractTitle(cleaned);
-  const images = rewriteImages(titled.tree, input.assetFiles);
+  const images = rewriteImages(stripLeadingRules(titled.tree), input.assetFiles);
   const linked = rewriteLinks(images.tree, {
     fromPath: entry.from,
     repoUrl: input.source.url.replace(/\/$/, ""),

@@ -1,6 +1,6 @@
 import type { Locale } from "./routing";
 
-export const NAMESPACES = ["common", "nav", "lesson"] as const;
+export const NAMESPACES = ["common", "nav", "lesson", "landing"] as const;
 export type Namespace = (typeof NAMESPACES)[number];
 
 type NamespaceTree = Record<string, unknown>;

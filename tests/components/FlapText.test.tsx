@@ -5,19 +5,23 @@ import { FlapText } from "@/features/board/FlapText";
 describe("FlapText", () => {
   it("exposes the plain text to assistive technology and hides the plates", () => {
     render(<FlapText text="Claude Code с нуля" locale="ru" as="h1" />);
-    expect(screen.getByRole("heading", { name: "Claude Code с нуля" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Claude Code с нуля" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("heading").textContent).toBe("Claude Code с нуля");
     const plates = document.querySelectorAll(".flap");
-    expect(plates.length).toBe([..."Claude Code с нуля"].length);
+    expect(plates.length).toBe([..."Claude Code с нуля".replaceAll(" ", "")].length);
     expect(plates[0]?.closest("[aria-hidden='true']")).not.toBeNull();
   });
 
-  it("uppercases plates with the locale and marks spaces", () => {
+  it("uppercases plates with the locale and groups them by word", () => {
     render(<FlapText text="цикл агента" locale="ru" />);
-    const chars = [...document.querySelectorAll(".flap")].map((el) =>
-      el.getAttribute("data-char"),
+    const words = [...document.querySelectorAll(".flap-word")].map((word) =>
+      [...word.querySelectorAll(".flap")]
+        .map((el) => el.getAttribute("data-char"))
+        .join(""),
     );
-    expect(chars.join("")).toBe("ЦИКЛ АГЕНТА");
-    expect(document.querySelector(".flap[data-space='true']")).not.toBeNull();
+    expect(words).toEqual(["ЦИКЛ", "АГЕНТА"]);
   });
 
   it("applies the amber tone", () => {

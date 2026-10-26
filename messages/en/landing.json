@@ -1,0 +1,38 @@
+{
+  "title": "Claude Code from zero",
+  "subtitle": "Track 1 · {modules} modules · {lessons} lessons · for managers and developers · no sign-up",
+  "columns": {
+    "lesson": "Lesson",
+    "name": "Name",
+    "time": "Time",
+    "status": "Status"
+  },
+  "status": {
+    "departing": "Departing · Start",
+    "scheduled": "On schedule",
+    "arrived": "Arrived",
+    "current": "Boarding"
+  },
+  "language": "Language",
+  "board": "Departures board",
+  "allLessons": "Full timetable",
+  "practice": {
+    "heading": "Practice checked in your terminal",
+    "body": "Every module ends with a task you solve in Claude Code. A local script checks the result, no account, no upload.",
+    "cta": "How practice works"
+  },
+  "projects": {
+    "heading": "Built with Claude Code by a salesperson, not a programmer",
+    "body": "Camerata, Kinly, Fabulita and vdmitriev.com are real products the author shipped this way. The course shows that path, not theory."
+  },
+  "sources": {
+    "heading": "Honest sources",
+    "body": "Lessons are adapted from MIT-licensed repositories. Each lesson names its source, authors and commit, and quotes the official Claude Code docs with a link.",
+    "cta": "Licenses"
+  },
+  "contact": {
+    "heading": "Need this in your company?",
+    "body": "Write to the author: email or Telegram. No forms, no tracking."
+  },
+  "minutes": "{count} min"
+}

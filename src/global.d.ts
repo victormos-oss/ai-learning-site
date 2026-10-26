@@ -2,11 +2,13 @@ import type { routing } from "@/i18n/routing";
 import type common from "../messages/en/common.json";
 import type nav from "../messages/en/nav.json";
 import type lesson from "../messages/en/lesson.json";
+import type landing from "../messages/en/landing.json";
 
 type Messages = {
   common: typeof common;
   nav: typeof nav;
   lesson: typeof lesson;
+  landing: typeof landing;
 };
 
 declare module "next-intl" {

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "./tokens.css";
-@import "./lesson.css";
-@import "../features/board/board.css";
+@import "./lesson.css" layer(components);
+@import "../features/board/board.css" layer(components);
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 

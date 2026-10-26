@@ -6,8 +6,6 @@ import "@fontsource-variable/sofia-sans-extra-condensed";
 import "@fontsource-variable/golos-text";
 import "@/styles/global.css";
 import { routing } from "@/i18n/routing";
-import { SiteFooter } from "@/components/layout/SiteFooter";
-import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SkipLink } from "@/components/layout/SkipLink";
 import { THEME_BOOT_SCRIPT } from "@/features/theme/theme-script";
 import { AnnouncerProvider } from "@/features/a11y/Announcer";
@@ -51,11 +49,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         <NextIntlClientProvider>
           <AnnouncerProvider>
             <SkipLink />
-            <SiteHeader />
-            <main id="content" tabIndex={-1} className="flex-1 outline-none">
-              {children}
-            </main>
-            <SiteFooter />
+            {children}
             <RouteFocus />
           </AnnouncerProvider>
         </NextIntlClientProvider>

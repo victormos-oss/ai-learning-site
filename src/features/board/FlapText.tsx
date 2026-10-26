@@ -16,8 +16,10 @@ type Props = {
 
 /**
  * A word set as a row of split-flap plates. The plates are decorative
- * (aria-hidden); the real text sits next to them for assistive technology
- * and for search engines, so uppercase plates never change how it is read.
+ * (aria-hidden) and draw their glyph from data-char through CSS, so the DOM
+ * carries the text exactly once: in the visually hidden span that assistive
+ * technology and search engines read. Letters of one word never wrap apart;
+ * lines may break between words, where the plates container leaves a gap.
  */
 export function FlapText({
   text,
@@ -28,7 +30,10 @@ export function FlapText({
   className,
   id,
 }: Props) {
-  const chars = [...text.toLocaleUpperCase(locale)];
+  const words = text
+    .toLocaleUpperCase(locale)
+    .split(" ")
+    .filter((w) => w.length > 0);
   return (
     <Tag
       id={id}
@@ -36,16 +41,17 @@ export function FlapText({
         .filter(Boolean)
         .join(" ")}
     >
-      <span aria-hidden="true" className="contents" data-flap-row={text}>
-        {chars.map((char, index) => (
-          <span
-            key={`${index}-${char}`}
-            className="flap"
-            data-tone={tone}
-            data-space={char === " " ? "true" : undefined}
-            data-char={char}
-          >
-            {char === " " ? "" : char}
+      <span aria-hidden="true" className="flap-text__plates" data-flap-row={text}>
+        {words.map((word, wordIndex) => (
+          <span key={`${wordIndex}-${word}`} className="flap-word">
+            {[...word].map((char, index) => (
+              <span
+                key={`${index}-${char}`}
+                className="flap"
+                data-tone={tone}
+                data-char={char}
+              />
+            ))}
           </span>
         ))}
       </span>
