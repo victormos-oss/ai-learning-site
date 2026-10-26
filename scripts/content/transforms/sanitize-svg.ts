@@ -1,7 +1,10 @@
 const SCRIPT_BLOCK = /<script\b[^>]*>[\s\S]*?(<\/script\s*>|$)/gi;
 const SCRIPT_SELF_CLOSING = /<script\b[^>]*\/>/gi;
-/** Elements that can embed HTML, external content or animate attributes into `javascript:`. */
-const EMBEDDING_ELEMENTS = /<(foreignObject|iframe|embed|object|style|animate|set|handler)\b[^>]*>[\s\S]*?(<\/\1\s*>|(?=<)|$)/gi;
+/** Elements that embed HTML or external content: dropped with their whole content. */
+const EMBEDDING_BLOCK = /<(foreignObject|iframe|embed|object|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi;
+/** Any stray opening, closing or self-closing tag of a disallowed element (animate* can set javascript: hrefs). */
+const DISALLOWED_TAG =
+  /<\/?(foreignObject|iframe|embed|object|style|animate|animateMotion|animateTransform|set|handler)\b[^>]*\/?>/gi;
 /** `onload="..."`, `onload='...'`, `onload=x`, also after `/` as in `<svg/onload=...>`. */
 const EVENT_HANDLER = /[\s/]on[a-z]+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi;
 /** `href` / `xlink:href` whose value is not a local `#id` reference, quoted or not. */
@@ -13,7 +16,8 @@ function sanitizeOnce(svg: string): string {
   return svg
     .replace(SCRIPT_BLOCK, "")
     .replace(SCRIPT_SELF_CLOSING, "")
-    .replace(EMBEDDING_ELEMENTS, "")
+    .replace(EMBEDDING_BLOCK, "")
+    .replace(DISALLOWED_TAG, "")
     .replace(EVENT_HANDLER, "")
     .replace(EXTERNAL_HREF, "");
 }

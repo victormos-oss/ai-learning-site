@@ -2,9 +2,24 @@ import { mkdtempSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { copyAssets, publicPathFor } from "../../../scripts/content/assets";
+import {
+  assertSafeTarget,
+  copyAssets,
+  publicPathFor,
+} from "../../../scripts/content/assets";
 
 describe("content assets", () => {
+  it("refuses to wipe a target that contains the source or looks like a root", () => {
+    expect(() => assertSafeTarget("C:/proj/content/tracks", "C:/proj")).toThrow(/unsafe/);
+    expect(() =>
+      assertSafeTarget("C:/proj/content/tracks", "C:/proj/content/tracks"),
+    ).toThrow(/unsafe/);
+    expect(() => assertSafeTarget("C:/proj/content/tracks", "C:/")).toThrow(/unsafe/);
+    expect(() =>
+      assertSafeTarget("C:/proj/content/tracks", "C:/proj/public/content"),
+    ).not.toThrow();
+  });
+
   it("maps a lesson asset folder to its public path", () => {
     const root = join("C:", "proj", "content", "tracks");
     const dir = join(

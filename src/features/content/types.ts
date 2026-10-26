@@ -16,7 +16,7 @@ export type LessonRecord = {
   lessonDir: string;
   moduleKey: string;
   contentHash: string;
-  headings: string[];
+  headings: { depth: 2 | 3; text: string; id: string }[];
   /** File names inside the lesson's assets folder. */
   assets: string[];
   /** Sibling code files, pre-highlighted at build time. */

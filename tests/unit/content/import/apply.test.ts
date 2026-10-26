@@ -64,7 +64,10 @@ function setupWorkspace(): { root: string; clones: string; clone: string } {
   write(join(clone, "s01_agent_loop/images/agent-loop.en.svg"), SVG);
   write(join(clone, "s01_agent_loop/images/agent-loop.svg"), SVG);
   // Binary asset must survive the copy byte for byte.
-  writeFileSync(join(clone, "s01_agent_loop/images/photo.png"), Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0xff, 0xfe]));
+  writeFileSync(
+    join(clone, "s01_agent_loop/images/photo.png"),
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0xff, 0xfe]),
+  );
   write(join(clone, "s02_tool_use/README.md"), S02_README);
   return { root, clones, clone };
 }
@@ -118,8 +121,15 @@ describe("content import end to end (temp workspace)", () => {
     const lock = readLock(join(ws.root, "content/sources/sources.lock.json"));
     expect(lock.sources["learn-claude-code"]?.commit).toBe(COMMIT);
     expect(Object.keys(lock.sources["learn-claude-code"]?.files ?? {})).toHaveLength(6);
-    const png = readFileSync(join(ws.root, "content/_upstream/learn-claude-code/s01_agent_loop/images/photo.png"));
-    expect([...png]).toEqual([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0xff, 0xfe]);
+    const png = readFileSync(
+      join(
+        ws.root,
+        "content/_upstream/learn-claude-code/s01_agent_loop/images/photo.png",
+      ),
+    );
+    expect([...png]).toEqual([
+      0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0xff, 0xfe,
+    ]);
     expect(readFileSync(result.reportPath!, "utf8")).toContain("| NEW");
   });
 

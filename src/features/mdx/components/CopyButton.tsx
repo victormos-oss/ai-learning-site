@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Check, Copy } from "@phosphor-icons/react";
+import { useAnnounce } from "@/features/a11y/Announcer";
 
 const RESET_DELAY_MS = 1800;
 
@@ -9,6 +10,7 @@ type Props = { text: string; label: string; doneLabel: string };
 
 export function CopyButton({ text, label, doneLabel }: Props) {
   const [copied, setCopied] = useState(false);
+  const announce = useAnnounce();
 
   useEffect(() => {
     if (!copied) return;
@@ -20,6 +22,7 @@ export function CopyButton({ text, label, doneLabel }: Props) {
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
+      announce(doneLabel);
     } catch {
       setCopied(false);
     }
@@ -37,9 +40,6 @@ export function CopyButton({ text, label, doneLabel }: Props) {
         <Copy aria-hidden="true" size={16} weight="bold" />
       )}
       <span>{copied ? doneLabel : label}</span>
-      <span role="status" aria-live="polite" className="sr-only">
-        {copied ? doneLabel : ""}
-      </span>
     </button>
   );
 }

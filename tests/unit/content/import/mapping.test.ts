@@ -112,13 +112,16 @@ describe("mapping schema", () => {
     expect(problems.some((p) => p.includes("s01_agent_loop/README.md"))).toBe(true);
   });
 
-  it.each(["../x/README.md", "/abs/README.md", "C:/x/README.md", "a\\b/README.md", "s01/../../x.md"])(
-    "rejects traversal or non-posix path %s",
-    (from) => {
-      const entries = [{ ...baseMapping.entries[0]!, from }];
-      expect(mappingFileSchema.safeParse({ ...baseMapping, entries }).success).toBe(false);
-    },
-  );
+  it.each([
+    "../x/README.md",
+    "/abs/README.md",
+    "C:/x/README.md",
+    "a\\b/README.md",
+    "s01/../../x.md",
+  ])("rejects traversal or non-posix path %s", (from) => {
+    const entries = [{ ...baseMapping.entries[0]!, from }];
+    expect(mappingFileSchema.safeParse({ ...baseMapping, entries }).success).toBe(false);
+  });
 
   it("refuses a source with use: link", () => {
     const linkSource = findSource(sources, "awesome-claude-code");

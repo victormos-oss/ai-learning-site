@@ -26,9 +26,4 @@ export function lessonMdxComponents(context: LessonMdxContext) {
   };
 }
 
-export const LESSON_COMPONENT_NAMES = [
-  "Callout",
-  "DocQuote",
-  "Figure",
-  "CodeFile",
-] as const;
+export { LESSON_COMPONENT_NAMES } from "../plugins/remark-guard";

@@ -7,5 +7,5 @@ export default handleI18nRouting;
 
 export const config = {
   // Everything except API routes, Next internals and files with an extension.
-  matcher: "/((?!api|_next|.*\\..*).*)",
+  matcher: "/((?!api(?:/|$)|_next|.*\\..*).*)",
 };

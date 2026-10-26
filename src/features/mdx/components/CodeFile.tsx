@@ -7,7 +7,12 @@ export type CodeFileContext = {
   sourceUrl?: string;
 };
 
-type Props = { src: string; context: CodeFileContext };
+type Props = {
+  src: string;
+  /** Path of the file inside the upstream folder when it differs from `src`. */
+  path?: string;
+  context: CodeFileContext;
+};
 
 const LANGUAGE_BY_EXTENSION: Record<string, string> = {
   py: "python",
@@ -19,8 +24,11 @@ const LANGUAGE_BY_EXTENSION: Record<string, string> = {
   md: "markdown",
 };
 
-export function CodeFile({ src, context }: Props) {
+export function CodeFile({ src, path, context }: Props) {
   const t = useTranslations("lesson.code");
+  if (!Object.hasOwn(context.files, src)) {
+    throw new Error(`CodeFile: "${src}" is not among the lesson's code files`);
+  }
   const file = context.files[src];
   if (!file) return null;
   const extension = src.split(".").pop() ?? "";
@@ -34,7 +42,7 @@ export function CodeFile({ src, context }: Props) {
       title={`${t("file")}: ${src}`}
       footer={
         context.sourceUrl ? (
-          <a href={`${context.sourceUrl}/${src}`} rel="noopener">
+          <a href={`${context.sourceUrl}/${path ?? src}`} rel="noopener">
             {t("openSource")}
           </a>
         ) : undefined

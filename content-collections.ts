@@ -6,6 +6,8 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
+import remarkGuard from "./src/features/mdx/plugins/remark-guard";
+import { collectHeadings } from "./src/features/content/headings";
 import { codeToHtml } from "shiki";
 import { z } from "zod";
 import {
@@ -39,11 +41,20 @@ function segments(directory: string): string[] {
 
 function parseLessonPath(directory: string, fileName: string) {
   const [trackDir, , moduleDir, , lessonDir] = segments(directory);
-  const locale = localeSchema.parse(fileName.replace(/\.mdx$/, ""));
+  const localeResult = localeSchema.safeParse(fileName.replace(/\.mdx$/, ""));
+  if (!localeResult.success) {
+    throw new Error(`Lesson file must be <locale>.mdx (en, ru, es), got ${directory}/${fileName}`);
+  }
+  const locale = localeResult.data;
   if (!trackDir || !moduleDir || !lessonDir) {
     throw new Error(`Unexpected lesson location: ${directory}/${fileName}`);
   }
   return { trackDir, moduleDir, lessonDir, locale };
+}
+
+/** CRLF checkouts on Windows must hash the same as LF checkouts in CI. */
+function normalizeNewlines(text: string): string {
+  return text.split("\r\n").join("\n");
 }
 
 function sha256(input: string): string {
@@ -73,6 +84,16 @@ async function readCodeFiles(
     }),
   );
   return Object.fromEntries(files);
+}
+
+/* Code files are highlighted once per lesson folder, not once per locale. */
+const codeFileCache = new Map<string, Promise<Record<string, { content: string; html: string }>>>();
+function readCodeFilesCached(lessonDir: string) {
+  const cached = codeFileCache.get(lessonDir);
+  if (cached) return cached;
+  const pending = readCodeFiles(lessonDir);
+  codeFileCache.set(lessonDir, pending);
+  return pending;
 }
 
 const tracks = defineCollection({
@@ -116,13 +137,13 @@ const lessons = defineCollection({
     }
     const lessonPath = join(CONTENT_ROOT, doc._meta.directory);
     const body = await compileMDX(context, doc, {
-      remarkPlugins: [remarkGfm],
+      remarkPlugins: [remarkGuard, remarkGfm],
       rehypePlugins: [
         rehypeSlug,
         [rehypeShiki, { theme: SHIKI_THEME }],
       ],
     });
-    const headings = [...doc.content.matchAll(/^##\s+(.+)$/gm)].map((m) => m[1] ?? "");
+    const headings = collectHeadings(doc.content);
     return {
       ...doc,
       locale,
@@ -131,10 +152,10 @@ const lessons = defineCollection({
       lessonDir,
       moduleKey: moduleMeta.key,
       access: doc.access ?? moduleMeta.access,
-      contentHash: sha256(doc.content),
+      contentHash: sha256(normalizeNewlines(doc.content)),
       headings,
       assets: listAssets(lessonPath),
-      codeFiles: await readCodeFiles(lessonPath),
+      codeFiles: await readCodeFilesCached(lessonPath),
       body,
     };
   },

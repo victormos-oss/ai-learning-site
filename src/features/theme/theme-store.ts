@@ -28,15 +28,28 @@ export function getThemeServerSnapshot(): ThemePreference {
   return "system";
 }
 
+/** Re-applies the resolved theme when the OS preference changes while on "system". */
+function onSystemChange(): void {
+  if (readPreference() !== "system") return;
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  document.documentElement.setAttribute(
+    "data-theme",
+    resolveTheme("system", prefersDark),
+  );
+}
+
 export function subscribeTheme(callback: () => void): () => void {
   const onStorage = (event: StorageEvent) => {
     if (event.key === THEME_STORAGE_KEY) callback();
   };
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
   window.addEventListener("storage", onStorage);
   window.addEventListener(CHANGE_EVENT, callback);
+  media.addEventListener("change", onSystemChange);
   return () => {
     window.removeEventListener("storage", onStorage);
     window.removeEventListener(CHANGE_EVENT, callback);
+    media.removeEventListener("change", onSystemChange);
   };
 }
 

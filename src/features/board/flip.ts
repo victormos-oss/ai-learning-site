@@ -23,7 +23,11 @@ export type FlapCellPlan = {
 };
 
 /** Pads both strings to the same length with spaces, uppercased for the board. */
-export function alignForFlip(from: string, to: string, locale?: string): [string, string] {
+export function alignForFlip(
+  from: string,
+  to: string,
+  locale?: string,
+): [string, string] {
   const a = from.toLocaleUpperCase(locale);
   const b = to.toLocaleUpperCase(locale);
   const width = Math.max(a.length, b.length);

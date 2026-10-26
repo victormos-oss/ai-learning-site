@@ -40,7 +40,10 @@ export const attributionSchema = z.object({
     .optional(),
   license: z.string().min(1),
   authors: z.string().min(1),
-  url: z.string().url(),
+  url: z
+    .string()
+    .url()
+    .refine((value) => value.startsWith("https://"), "attribution url must use https"),
   relation: attributionRelationSchema,
 });
 export type Attribution = z.infer<typeof attributionSchema>;

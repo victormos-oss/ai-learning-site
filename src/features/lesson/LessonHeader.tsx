@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { headingSlug } from "./heading-slug";
+import type { LessonHeading } from "@/features/content/headings";
 
 type Props = {
   trackSlug: string;
@@ -8,7 +8,7 @@ type Props = {
   title: string;
   summary: string;
   estimatedMinutes?: number;
-  headings: readonly string[];
+  headings: readonly LessonHeading[];
   tocLabel: string;
   breadcrumbsLabel: string;
   tracksLabel: string;
@@ -51,11 +51,13 @@ export function LessonHeader(props: Props) {
             {props.tocLabel}
           </p>
           <ol className="mt-2 columns-1 gap-8 text-[0.95rem] md:columns-2">
-            {props.headings.map((heading) => (
-              <li key={heading} className="py-0.5">
-                <a href={`#${headingSlug(heading)}`}>{heading}</a>
-              </li>
-            ))}
+            {props.headings
+              .filter((heading) => heading.depth === 2)
+              .map((heading) => (
+                <li key={heading.id} className="py-0.5">
+                  <a href={`#${heading.id}`}>{heading.text}</a>
+                </li>
+              ))}
           </ol>
         </nav>
       )}

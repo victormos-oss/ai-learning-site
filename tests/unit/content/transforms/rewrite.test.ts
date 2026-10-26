@@ -159,7 +159,13 @@ describe("rewriteLinks", () => {
 
 describe("rewriteLinks unsafe schemes", () => {
   it("neutralizes javascript: and data: links but keeps mailto", () => {
-    const ctx = { fromPath: "a/README.md", repoUrl: "https://github.com/o/r", commit: "abcdef1", track: "t", entries: [] };
+    const ctx = {
+      fromPath: "a/README.md",
+      repoUrl: "https://github.com/o/r",
+      commit: "abcdef1",
+      track: "t",
+      entries: [],
+    };
     const md = "[x](javascript:alert(1)) [y](data:text/html,1) [m](mailto:a@b.c)";
     const out = stringifyMdx(rewriteLinks(parseMarkdown(md), ctx));
     expect(out).not.toContain("javascript:");
@@ -170,7 +176,8 @@ describe("rewriteLinks unsafe schemes", () => {
 
 describe("sanitizeSvg", () => {
   it("defeats common regex bypasses", () => {
-    const svg = '<svg/onload=alert(1)><scr<script></script>ipt>x</script><a href=javascript:alert(1)>t</a><foreignObject><iframe src="https://e.test"></iframe></foreignObject><use href="#ok"/></svg>';
+    const svg =
+      '<svg/onload=alert(1)><scr<script></script>ipt>x</script><a href=javascript:alert(1)>t</a><foreignObject><iframe src="https://e.test"></iframe></foreignObject><use href="#ok"/></svg>';
     const out = sanitizeSvg(svg);
     expect(out).not.toMatch(/onload/i);
     expect(out).not.toMatch(/<script/i);

@@ -30,7 +30,12 @@ export function FlapText({
 }: Props) {
   const chars = [...text.toLocaleUpperCase(locale)];
   return (
-    <Tag id={id} className={["flap-text", `flap-text--size-${size}`, className].filter(Boolean).join(" ")}>
+    <Tag
+      id={id}
+      className={["flap-text", `flap-text--size-${size}`, className]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <span aria-hidden="true" className="contents" data-flap-row={text}>
         {chars.map((char, index) => (
           <span
