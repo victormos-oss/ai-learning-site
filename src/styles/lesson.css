@@ -120,6 +120,11 @@
   border-radius: 0;
 }
 
+/* Links on the dark code surface use amber, the page accent is too dark there. */
+.lesson-body .code-block a {
+  color: var(--amber);
+}
+
 /* Tables */
 .lesson-body table {
   display: block;

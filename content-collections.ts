@@ -20,7 +20,7 @@ import {
 const CONTENT_ROOT = "content/tracks";
 const CODE_EXTENSIONS = new Set([".py", ".ts", ".js", ".json", ".sh", ".md"]);
 /* The code surface is dark in both site themes, so one dark Shiki theme is enough. */
-const SHIKI_THEME = "github-dark";
+const SHIKI_THEME = "github-dark-high-contrast";
 const LANGUAGE_BY_EXTENSION: Record<string, string> = {
   ".py": "python",
   ".ts": "typescript",

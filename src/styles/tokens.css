@@ -30,7 +30,7 @@
   --accent: #8a5a0e;
   --accent-ink: #ffffff;
   --focus: #e0a526;
-  --code-bg: #1f2227;
+  --code-bg: #0e1116;
   --code-ink: #ece6d6;
 
   /* Type */
@@ -55,7 +55,7 @@
   --ink-muted: #b4b8be;
   --accent: #e0a526;
   --accent-ink: #1a1507;
-  --code-bg: #111316;
+  --code-bg: #0a0c10;
   --code-ink: #ece6d6;
 }
 
@@ -68,7 +68,7 @@
     --ink-muted: #b4b8be;
     --accent: #e0a526;
     --accent-ink: #1a1507;
-    --code-bg: #111316;
+    --code-bg: #0a0c10;
     --code-ink: #ece6d6;
   }
 }
