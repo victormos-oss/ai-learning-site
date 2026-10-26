@@ -1,0 +1,27 @@
+{
+  "title": "Mi progreso",
+  "intro": "El progreso se guarda solo en este navegador. Exporta un archivo para llevarlo a otro dispositivo.",
+  "summary": "{done} de {total} lecciones ({percent}%)",
+  "lessons": "{count, plural, one {# lección} other {# lecciones}}",
+  "empty": "Aún no hay lecciones completadas. Abre la primera lección y márcala al final.",
+  "markDone": "Marcar como completada",
+  "markedDone": "Completada",
+  "unmark": "Desmarcar",
+  "announceDone": "Lección marcada como completada",
+  "announceUndone": "Marca retirada",
+  "export": "Exportar progreso",
+  "import": "Importar progreso",
+  "importHint": "Elige un archivo exportado desde este sitio.",
+  "imported": "Progreso importado: {count} lecciones",
+  "importError": "Este archivo no es una exportación de progreso de este sitio.",
+  "reset": "Restablecer progreso",
+  "resetConfirm": "¿Borrar todo el progreso de este navegador?",
+  "resetYes": "Sí, borrar",
+  "resetNo": "Cancelar",
+  "storageWarning": "El almacenamiento del navegador no está disponible aquí, el progreso no se guardará al salir.",
+  "status": {
+    "completed": "Completada",
+    "started": "Empezada",
+    "new": "Sin empezar"
+  }
+}

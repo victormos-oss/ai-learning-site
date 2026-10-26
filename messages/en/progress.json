@@ -1,0 +1,27 @@
+{
+  "title": "My progress",
+  "intro": "Progress is stored in this browser only. Export a file to move it to another device.",
+  "summary": "{done} of {total} lessons ({percent}%)",
+  "lessons": "{count, plural, one {# lesson} other {# lessons}}",
+  "empty": "No lessons completed yet. Open the first lesson and mark it done at the end.",
+  "markDone": "Mark as completed",
+  "markedDone": "Completed",
+  "unmark": "Mark as not completed",
+  "announceDone": "Lesson marked as completed",
+  "announceUndone": "Lesson marked as not completed",
+  "export": "Export progress",
+  "import": "Import progress",
+  "importHint": "Choose a file exported from this site.",
+  "imported": "Progress imported: {count} lessons",
+  "importError": "This file is not a progress export from this site.",
+  "reset": "Reset progress",
+  "resetConfirm": "Delete all progress in this browser?",
+  "resetYes": "Yes, delete",
+  "resetNo": "Cancel",
+  "storageWarning": "Browser storage is unavailable here, so progress will not be saved after you leave.",
+  "status": {
+    "completed": "Completed",
+    "started": "Started",
+    "new": "Not started"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "videos": {
+    "title": "Vídeos",
+    "intro": "Sesiones grabadas y demostraciones. Cada vídeo se inserta desde su plataforma y se carga solo al pulsar reproducir.",
+    "empty": "Todavía no hay vídeos. Las primeras grabaciones aparecerán tras el primer webinar.",
+    "play": "Reproducir vídeo: {title}"
+  },
+  "webinars": {
+    "title": "Webinars",
+    "intro": "Sesiones en directo sobre Claude Code. Las horas se muestran en tu zona horaria.",
+    "upcoming": "Próximos",
+    "past": "Pasados",
+    "emptyUpcoming": "No hay webinars programados ahora. Escribe al autor para recibir una invitación.",
+    "emptyPast": "Aún no hay webinars pasados.",
+    "register": "Inscribirse",
+    "recording": "Ver la grabación",
+    "duration": "{minutes} min"
+  }
+}

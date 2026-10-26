@@ -1,0 +1,10 @@
+# Recorded videos shown on /videos. Each entry embeds from a whitelisted provider.
+# Example:
+# videos:
+#   - slug: claude-code-first-task
+#     title: { en: "First task in Claude Code", ru: "Первая задача в Claude Code" }
+#     video: { provider: youtube, id: dQw4w9WgXcQ }
+#     poster: /media/claude-code-first-task.jpg
+#     durationMinutes: 12
+#     publishedAt: 2026-11-01
+videos: []

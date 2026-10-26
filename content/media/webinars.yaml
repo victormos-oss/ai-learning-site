@@ -1,0 +1,9 @@
+# Live sessions shown on /webinars. startsAt is ISO 8601 with an offset.
+# Example:
+# webinars:
+#   - slug: claude-code-for-managers
+#     title: { en: "Claude Code for managers", ru: "Claude Code для менеджеров" }
+#     startsAt: 2026-11-20T19:00:00+03:00
+#     durationMinutes: 60
+#     registrationUrl: https://example.com/register
+webinars: []

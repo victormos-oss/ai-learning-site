@@ -1,0 +1,12 @@
+{
+  "title": "Licenses and sources",
+  "intro": "Lessons are adapted from open repositories. The original copyright notices and license texts are reproduced here as those licenses require.",
+  "adapted": "Adapted sources",
+  "quoted": "Quoted sources",
+  "linked": "Linked only",
+  "linkedNote": "These projects are referenced by link only: their licenses do not permit reuse of the text.",
+  "licenseText": "License text",
+  "viewOnGitHub": "View on GitHub",
+  "siteCode": "The site itself",
+  "siteCodeNote": "Source code of this site is public at github.com/victormos-oss/ai-learning-site. Lesson texts keep the license of their source."
+}

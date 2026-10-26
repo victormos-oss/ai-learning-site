@@ -1,0 +1,19 @@
+{
+  "videos": {
+    "title": "Videos",
+    "intro": "Recorded sessions and demos. Each video is embedded from its platform and loads only after you press play.",
+    "empty": "No videos yet. The first recordings will appear after the first webinar.",
+    "play": "Play video: {title}"
+  },
+  "webinars": {
+    "title": "Webinars",
+    "intro": "Live sessions on Claude Code. Times are shown in your local time zone.",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "emptyUpcoming": "No webinars scheduled right now. Write to the author to be notified.",
+    "emptyPast": "No past webinars yet.",
+    "register": "Register",
+    "recording": "Watch the recording",
+    "duration": "{minutes} min"
+  }
+}

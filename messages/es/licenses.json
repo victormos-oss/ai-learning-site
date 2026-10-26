@@ -1,0 +1,12 @@
+{
+  "title": "Licencias y fuentes",
+  "intro": "Las lecciones se adaptan de repositorios abiertos. Los avisos de copyright y los textos de licencia originales se reproducen aquí como exigen esas licencias.",
+  "adapted": "Fuentes adaptadas",
+  "quoted": "Fuentes citadas",
+  "linked": "Solo enlaces",
+  "linkedNote": "Estos proyectos solo se referencian con un enlace: sus licencias no permiten reutilizar el texto.",
+  "licenseText": "Texto de la licencia",
+  "viewOnGitHub": "Ver en GitHub",
+  "siteCode": "El propio sitio",
+  "siteCodeNote": "El código fuente de este sitio es público en github.com/victormos-oss/ai-learning-site. Los textos de las lecciones conservan la licencia de su fuente."
+}
