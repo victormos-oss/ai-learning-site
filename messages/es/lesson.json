@@ -34,5 +34,18 @@
   "figure": {
     "englishOnly": "Las etiquetas del diagrama están en inglés."
   },
-  "comingSoon": "Las lecciones de este módulo están en preparación."
+  "comingSoon": "Las lecciones de este módulo están en preparación.",
+  "quiz": {
+    "heading": "Cuestionario",
+    "progress": "Pregunta {current} de {total}",
+    "check": "Comprobar",
+    "next": "Siguiente",
+    "retry": "Intentar de nuevo",
+    "correct": "Correcto",
+    "incorrect": "Incorrecto. La respuesta correcta: {answer}",
+    "summary": "Has acertado {score} de {total}.",
+    "passed": "Cuestionario superado.",
+    "failed": "Por debajo del mínimo. Vuelve a leer la lección e inténtalo otra vez.",
+    "englishOnly": "Este cuestionario está en inglés por ahora."
+  }
 }

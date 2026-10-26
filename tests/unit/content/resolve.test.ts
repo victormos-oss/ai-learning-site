@@ -26,6 +26,7 @@ function lesson(
     headings: [],
     assets: [],
     codeFiles: {},
+    quizData: null,
     attribution: [],
     body: "",
     ...partial,

@@ -1,0 +1,229 @@
+{
+  "lesson": "cc-zero.agent-loop",
+  "version": 1,
+  "passRatio": 0.7,
+  "questions": [
+    {
+      "id": "q1",
+      "stage": "pre",
+      "correct": 2,
+      "i18n": {
+        "en": {
+          "question": "Without an agent loop, what happens after the model writes a bash command?",
+          "options": [
+            "The command runs automatically",
+            "The model keeps reasoning on the output",
+            "Nothing: a person has to run it and paste the output back",
+            "The model refuses to write commands"
+          ],
+          "explanation": "A model only outputs text. Someone or something has to execute the command and feed the result back. That is the job the loop takes over."
+        },
+        "ru": {
+          "question": "Без цикла агента что происходит после того, как модель написала bash-команду?",
+          "options": [
+            "Команда выполняется автоматически",
+            "Модель продолжает рассуждать по результату",
+            "Ничего: человек должен сам выполнить команду и вставить вывод обратно",
+            "Модель отказывается писать команды"
+          ],
+          "explanation": "Модель только выводит текст. Кто-то должен выполнить команду и вернуть результат. Именно эту работу берёт на себя цикл."
+        },
+        "es": {
+          "question": "Sin un bucle de agente, ¿qué pasa después de que el modelo escribe un comando bash?",
+          "options": [
+            "El comando se ejecuta automáticamente",
+            "El modelo sigue razonando sobre la salida",
+            "Nada: una persona tiene que ejecutarlo y pegar la salida de vuelta",
+            "El modelo se niega a escribir comandos"
+          ],
+          "explanation": "Un modelo solo produce texto. Alguien o algo tiene que ejecutar el comando y devolver el resultado. Ese es el trabajo que asume el bucle."
+        }
+      }
+    },
+    {
+      "id": "q2",
+      "stage": "check",
+      "correct": 1,
+      "i18n": {
+        "en": {
+          "question": "What signal makes the loop continue for another round?",
+          "options": [
+            "The response is longer than 100 tokens",
+            "The response contains a tool_use block",
+            "The user types 'continue'",
+            "A timer fires every second"
+          ],
+          "explanation": "The loop inspects the response content. A tool_use block means the model asked for a tool, so the loop executes it and feeds the result back."
+        },
+        "ru": {
+          "question": "Какой сигнал заставляет цикл сделать ещё один оборот?",
+          "options": [
+            "Ответ длиннее 100 токенов",
+            "В ответе есть блок tool_use",
+            "Пользователь написал «продолжай»",
+            "Срабатывает таймер каждую секунду"
+          ],
+          "explanation": "Цикл смотрит на содержимое ответа. Блок tool_use означает, что модель запросила инструмент: цикл выполняет его и возвращает результат."
+        },
+        "es": {
+          "question": "¿Qué señal hace que el bucle dé otra vuelta?",
+          "options": [
+            "La respuesta tiene más de 100 tokens",
+            "La respuesta contiene un bloque tool_use",
+            "El usuario escribe «continúa»",
+            "Un temporizador salta cada segundo"
+          ],
+          "explanation": "El bucle inspecciona el contenido de la respuesta. Un bloque tool_use significa que el modelo pidió una herramienta, así que el bucle la ejecuta y devuelve el resultado."
+        }
+      }
+    },
+    {
+      "id": "q3",
+      "stage": "check",
+      "correct": 0,
+      "i18n": {
+        "en": {
+          "question": "When does the loop stop?",
+          "options": [
+            "When a response contains no tool_use block",
+            "After exactly ten iterations",
+            "When the model outputs the word 'done'",
+            "When the bash command returns an error"
+          ],
+          "explanation": "No tool call means the model has nothing more to execute, so the loop returns the final answer."
+        },
+        "ru": {
+          "question": "Когда цикл останавливается?",
+          "options": [
+            "Когда в ответе нет блока tool_use",
+            "Ровно после десяти итераций",
+            "Когда модель напишет слово «готово»",
+            "Когда bash-команда вернула ошибку"
+          ],
+          "explanation": "Нет вызова инструмента, значит модели больше нечего выполнять, и цикл возвращает финальный ответ."
+        },
+        "es": {
+          "question": "¿Cuándo se detiene el bucle?",
+          "options": [
+            "Cuando una respuesta no contiene ningún bloque tool_use",
+            "Exactamente tras diez iteraciones",
+            "Cuando el modelo escribe la palabra «listo»",
+            "Cuando el comando bash devuelve un error"
+          ],
+          "explanation": "Sin llamada a herramienta el modelo no tiene nada más que ejecutar, así que el bucle devuelve la respuesta final."
+        }
+      }
+    },
+    {
+      "id": "q4",
+      "stage": "check",
+      "correct": 2,
+      "i18n": {
+        "en": {
+          "question": "What is appended to the conversation after a tool runs?",
+          "options": [
+            "Only the model's original request",
+            "A new system prompt",
+            "A user message with the tool_result for that tool_use id",
+            "Nothing, the result is printed to the terminal only"
+          ],
+          "explanation": "Each tool result goes back as a tool_result block tied to the tool_use id, so the model can reason about what actually happened."
+        },
+        "ru": {
+          "question": "Что добавляется в диалог после выполнения инструмента?",
+          "options": [
+            "Только исходный запрос модели",
+            "Новый системный промпт",
+            "Сообщение пользователя с tool_result для этого tool_use id",
+            "Ничего, результат только печатается в терминал"
+          ],
+          "explanation": "Каждый результат возвращается блоком tool_result, привязанным к id вызова, чтобы модель могла рассуждать о том, что реально произошло."
+        },
+        "es": {
+          "question": "¿Qué se añade a la conversación después de ejecutar una herramienta?",
+          "options": [
+            "Solo la petición original del modelo",
+            "Un nuevo system prompt",
+            "Un mensaje de usuario con el tool_result para ese tool_use id",
+            "Nada, el resultado solo se imprime en la terminal"
+          ],
+          "explanation": "Cada resultado vuelve como un bloque tool_result ligado al id de la llamada, para que el modelo razone sobre lo que pasó de verdad."
+        }
+      }
+    },
+    {
+      "id": "q5",
+      "stage": "post",
+      "correct": 1,
+      "i18n": {
+        "en": {
+          "question": "Why is a single bash tool enough for a first agent?",
+          "options": [
+            "Because bash can call the model directly",
+            "Because almost any file or system action can be expressed as a shell command",
+            "Because other tools are not allowed by the API",
+            "Because bash runs faster than Python"
+          ],
+          "explanation": "One general tool plus one loop already covers listing, reading, editing and running. Specialised tools come later for safety and precision."
+        },
+        "ru": {
+          "question": "Почему одного инструмента bash достаточно для первого агента?",
+          "options": [
+            "Потому что bash может напрямую вызывать модель",
+            "Потому что почти любое действие с файлами и системой выражается командой оболочки",
+            "Потому что другие инструменты запрещены API",
+            "Потому что bash работает быстрее Python"
+          ],
+          "explanation": "Один универсальный инструмент плюс один цикл уже покрывают просмотр, чтение, правку и запуск. Специальные инструменты добавляются позже ради безопасности и точности."
+        },
+        "es": {
+          "question": "¿Por qué basta una sola herramienta bash para un primer agente?",
+          "options": [
+            "Porque bash puede llamar al modelo directamente",
+            "Porque casi cualquier acción sobre archivos o el sistema se expresa como un comando de shell",
+            "Porque la API no permite otras herramientas",
+            "Porque bash es más rápido que Python"
+          ],
+          "explanation": "Una herramienta general más un bucle ya cubren listar, leer, editar y ejecutar. Las herramientas especializadas llegan después por seguridad y precisión."
+        }
+      }
+    },
+    {
+      "id": "q6",
+      "stage": "post",
+      "correct": 3,
+      "i18n": {
+        "en": {
+          "question": "The model writes 'rm -rf /' as a bash command. What does the plain agent loop from this lesson do?",
+          "options": [
+            "Refuses because it understands the command",
+            "Asks the user for confirmation",
+            "Logs a warning and skips it",
+            "Executes it: the loop has no safety layer yet"
+          ],
+          "explanation": "The minimal loop executes whatever the model asks for. Permissions and hooks, the subject of later lessons, exist precisely to add that control."
+        },
+        "ru": {
+          "question": "Модель написала bash-команду «rm -rf /». Что сделает простой цикл из этого урока?",
+          "options": [
+            "Откажется, потому что понимает команду",
+            "Спросит подтверждение у пользователя",
+            "Запишет предупреждение и пропустит",
+            "Выполнит: у цикла ещё нет слоя безопасности"
+          ],
+          "explanation": "Минимальный цикл выполняет всё, что просит модель. Разрешения и хуки из следующих уроков существуют именно для этого контроля."
+        },
+        "es": {
+          "question": "El modelo escribe «rm -rf /» como comando bash. ¿Qué hace el bucle simple de esta lección?",
+          "options": [
+            "Se niega porque entiende el comando",
+            "Pide confirmación al usuario",
+            "Registra un aviso y lo omite",
+            "Lo ejecuta: el bucle todavía no tiene capa de seguridad"
+          ],
+          "explanation": "El bucle mínimo ejecuta lo que el modelo pida. Los permisos y los hooks de las lecciones siguientes existen precisamente para ese control."
+        }
+      }
+    }
+  ]
+}

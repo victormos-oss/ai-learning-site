@@ -34,5 +34,18 @@
   "figure": {
     "englishOnly": "Diagram labels are in English."
   },
-  "comingSoon": "Lessons for this module are being prepared."
+  "comingSoon": "Lessons for this module are being prepared.",
+  "quiz": {
+    "heading": "Quiz",
+    "progress": "Question {current} of {total}",
+    "check": "Check",
+    "next": "Next",
+    "retry": "Try again",
+    "correct": "Correct",
+    "incorrect": "Incorrect. The right answer: {answer}",
+    "summary": "You answered {score} of {total} correctly.",
+    "passed": "Quiz passed.",
+    "failed": "Below the pass mark. Read the lesson again and retry.",
+    "englishOnly": "This quiz is in English for now."
+  }
 }

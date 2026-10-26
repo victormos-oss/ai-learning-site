@@ -10,6 +10,7 @@ import remarkGuard from "./src/features/mdx/plugins/remark-guard";
 import { collectHeadings } from "./src/features/content/headings";
 import { codeToHtml } from "shiki";
 import { z } from "zod";
+import { quizSchema } from "./src/features/quiz/schema";
 import {
   lessonFrontmatterSchema,
   localeSchema,
@@ -59,6 +60,17 @@ function normalizeNewlines(text: string): string {
 
 function sha256(input: string): string {
   return `sha256:${createHash("sha256").update(input, "utf8").digest("hex")}`;
+}
+
+/** quiz.json next to the lesson, validated; null when the lesson has none. */
+function readQuiz(lessonDir: string, lessonKey: string) {
+  const file = join(lessonDir, "quiz.json");
+  if (!existsSync(file)) return null;
+  const quiz = quizSchema.parse(JSON.parse(readFileSync(file, "utf8")));
+  if (quiz.lesson !== lessonKey) {
+    throw new Error(`${file}: quiz.lesson "${quiz.lesson}" does not match ${lessonKey}`);
+  }
+  return quiz;
 }
 
 function listAssets(lessonDir: string): string[] {
@@ -155,6 +167,7 @@ const lessons = defineCollection({
       contentHash: sha256(normalizeNewlines(doc.content)),
       headings,
       assets: listAssets(lessonPath),
+      quizData: readQuiz(lessonPath, doc.key),
       codeFiles: await readCodeFilesCached(lessonPath),
       body,
     };

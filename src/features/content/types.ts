@@ -1,4 +1,5 @@
 import type { AccessLevel, Attribution, ContentLocale } from "./schema";
+import type { Quiz } from "@/features/quiz/schema";
 
 export type LessonRecord = {
   key: string;
@@ -21,6 +22,8 @@ export type LessonRecord = {
   assets: string[];
   /** Sibling code files, pre-highlighted at build time. */
   codeFiles: Record<string, { content: string; html: string }>;
+  /** Validated quiz.json for this lesson, null when absent. */
+  quizData: Quiz | null;
   attribution: Attribution[];
   translation?: { status: "machine" | "reviewed" | "stale"; sourceHash: string };
   body: string;
