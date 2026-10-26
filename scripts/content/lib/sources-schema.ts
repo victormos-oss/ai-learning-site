@@ -42,6 +42,8 @@ export function findSource(sources: readonly SourceEntry[], id: string): SourceE
 
 /** `owner/repo` for GitHub URLs, otherwise the registry name. */
 export function sourceDisplayName(source: SourceEntry): string {
-  const match = /^https:\/\/github\.com\/([^/]+)\/([^/]+?)(?:\.git)?\/?$/.exec(source.url);
+  const match = /^https:\/\/github\.com\/([^/]+)\/([^/]+?)(?:\.git)?\/?$/.exec(
+    source.url,
+  );
   return match ? `${match[1]}/${match[2]}` : source.name;
 }

@@ -34,7 +34,9 @@ export function nodeText(node: Node): string {
 }
 
 export function isHeading(node: Node, depth?: number): node is Heading {
-  return node.type === "heading" && (depth === undefined || (node as Heading).depth === depth);
+  return (
+    node.type === "heading" && (depth === undefined || (node as Heading).depth === depth)
+  );
 }
 
 export function isParagraph(node: Node): node is Paragraph {
@@ -45,7 +47,10 @@ export function withChildren(tree: Root, children: RootContent[]): Root {
   return { ...tree, children };
 }
 
-export function filterRootChildren(tree: Root, keep: (node: RootContent) => boolean): Root {
+export function filterRootChildren(
+  tree: Root,
+  keep: (node: RootContent) => boolean,
+): Root {
   return withChildren(tree, tree.children.filter(keep));
 }
 

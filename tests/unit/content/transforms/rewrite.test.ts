@@ -95,11 +95,13 @@ describe("rewriteImages", () => {
     ]);
   });
 
-  it("warns about missing files and leaves external images alone", () => {
+  it("warns about missing files and strips external images to their alt text", () => {
     const md = "![Missing](images/nope.svg)\n\n![Ext](https://x.test/a.png)";
     const result = rewriteImages(parseMarkdown(md), []);
-    expect(result.warnings).toHaveLength(1);
-    expect(stringifyMdx(result.tree)).toContain("https://x.test/a.png");
+    expect(result.warnings).toHaveLength(2);
+    const out = stringifyMdx(result.tree);
+    expect(out).not.toContain("https://x.test/a.png");
+    expect(out).toContain("[Ext]");
   });
 });
 

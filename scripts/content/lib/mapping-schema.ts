@@ -47,14 +47,26 @@ export const mappingFileSchema = z
   })
   .superRefine((mapping, ctx) => {
     for (const key of duplicates(mapping.entries.map((entry) => entry.key))) {
-      ctx.addIssue({ code: "custom", message: `duplicate key "${key}"`, path: ["entries"] });
+      ctx.addIssue({
+        code: "custom",
+        message: `duplicate key "${key}"`,
+        path: ["entries"],
+      });
     }
     for (const slug of duplicates(mapping.entries.map((entry) => entry.slug))) {
-      ctx.addIssue({ code: "custom", message: `duplicate slug "${slug}"`, path: ["entries"] });
+      ctx.addIssue({
+        code: "custom",
+        message: `duplicate slug "${slug}"`,
+        path: ["entries"],
+      });
     }
     const orders = mapping.entries.map((entry) => `${entry.module}#${entry.order}`);
     for (const order of duplicates(orders)) {
-      ctx.addIssue({ code: "custom", message: `duplicate order ${order}`, path: ["entries"] });
+      ctx.addIssue({
+        code: "custom",
+        message: `duplicate order ${order}`,
+        path: ["entries"],
+      });
     }
   });
 export type Mapping = z.infer<typeof mappingFileSchema>;

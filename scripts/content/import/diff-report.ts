@@ -25,7 +25,12 @@ export interface ReportInput {
 }
 
 export function unifiedDiff(diff: FileDiff): string {
-  return createTwoFilesPatch(`locked/${diff.path}`, `upstream/${diff.path}`, diff.before, diff.after);
+  return createTwoFilesPatch(
+    `locked/${diff.path}`,
+    `upstream/${diff.path}`,
+    diff.before,
+    diff.after,
+  );
 }
 
 function listSection(title: string, items: readonly string[]): string[] {
@@ -47,7 +52,18 @@ function applySection(apply: ApplySummary | undefined): string[] {
 
 function diffSection(diffs: readonly FileDiff[]): string[] {
   if (diffs.length === 0) return [];
-  return ["## Diffs", "", ...diffs.flatMap((d) => [`### ${d.path}`, "", "```diff", unifiedDiff(d).trimEnd(), "```", ""])];
+  return [
+    "## Diffs",
+    "",
+    ...diffs.flatMap((d) => [
+      `### ${d.path}`,
+      "",
+      "```diff",
+      unifiedDiff(d).trimEnd(),
+      "```",
+      "",
+    ]),
+  ];
 }
 
 /** Markdown report for `content/reports/import-<date>.md`. */
@@ -68,5 +84,8 @@ export function buildReport(input: ReportInput): string {
     "",
     ...diffSection(input.diffs),
     ...applySection(input.apply),
-  ].join("\n").trimEnd().concat("\n");
+  ]
+    .join("\n")
+    .trimEnd()
+    .concat("\n");
 }

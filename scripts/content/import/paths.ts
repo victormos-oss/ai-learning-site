@@ -30,13 +30,28 @@ export function mappingFile(paths: ProjectPaths, sourceId: string): string {
 }
 
 /** `content/_upstream/<source>/<path>` */
-export function upstreamFile(paths: ProjectPaths, sourceId: string, relativePath: string): string {
+export function upstreamFile(
+  paths: ProjectPaths,
+  sourceId: string,
+  relativePath: string,
+): string {
   return join(paths.upstreamDir, sourceId, relativePath);
 }
 
 /** `content/tracks/<track>/modules/<module>/lessons/<NN>-<slug>` */
-export function lessonDir(paths: ProjectPaths, track: string, entry: MappingEntry): string {
-  return join(paths.tracksDir, track, "modules", entry.module, "lessons", lessonDirName(entry));
+export function lessonDir(
+  paths: ProjectPaths,
+  track: string,
+  entry: MappingEntry,
+): string {
+  return join(
+    paths.tracksDir,
+    track,
+    "modules",
+    entry.module,
+    "lessons",
+    lessonDirName(entry),
+  );
 }
 
 export function reportFile(paths: ProjectPaths, date: Date): string {

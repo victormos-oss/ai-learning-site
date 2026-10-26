@@ -64,7 +64,9 @@ function buildFrontmatter(
         commit,
         license: source.license,
         authors: source.authors,
-        url: sectionDir ? `${repoUrl}/tree/${commit}/${sectionDir}` : `${repoUrl}/tree/${commit}`,
+        url: sectionDir
+          ? `${repoUrl}/tree/${commit}/${sectionDir}`
+          : `${repoUrl}/tree/${commit}`,
         relation: "adapted",
       },
     ],
@@ -74,7 +76,9 @@ function buildFrontmatter(
 /** Markdown README from upstream -> validated frontmatter + MDX body. */
 export function transformLesson(input: TransformInput): TransformResult {
   const { entry } = input;
-  const cleaned = stripNextArrow(stripNavChain(stripLangBar(stripHtmlComments(parseMarkdown(input.markdown)))));
+  const cleaned = stripNextArrow(
+    stripNavChain(stripLangBar(stripHtmlComments(parseMarkdown(input.markdown)))),
+  );
   const titled = extractTitle(cleaned);
   const images = rewriteImages(titled.tree, input.assetFiles);
   const linked = rewriteLinks(images.tree, {
@@ -84,7 +88,10 @@ export function transformLesson(input: TransformInput): TransformResult {
     track: input.track,
     entries: input.entries,
   });
-  const withCode = inlineCodeFile(linked, entry.code ? posix.basename(entry.code) : undefined);
+  const withCode = inlineCodeFile(
+    linked,
+    entry.code ? posix.basename(entry.code) : undefined,
+  );
 
   const frontmatter = buildFrontmatter(input, titled.title, titled.summary);
   const body = stringifyMdx(withCode).trimEnd();

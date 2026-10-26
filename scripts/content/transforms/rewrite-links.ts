@@ -21,11 +21,16 @@ const UNSAFE_PLACEHOLDER = "#unsafe-link-removed";
 
 function splitHash(url: string): { path: string; hash: string } {
   const at = url.indexOf("#");
-  return at === -1 ? { path: url, hash: "" } : { path: url.slice(0, at), hash: url.slice(at) };
+  return at === -1
+    ? { path: url, hash: "" }
+    : { path: url.slice(0, at), hash: url.slice(at) };
 }
 
 /** Normalizes `../s02_tool_use/README.md` into the section folder `s02_tool_use`. */
-function resolveRelative(fromPath: string, target: string): { path: string; isDir: boolean } {
+function resolveRelative(
+  fromPath: string,
+  target: string,
+): { path: string; isDir: boolean } {
   const joined = posix.normalize(posix.join(posix.dirname(fromPath), target));
   const isDir = target.endsWith("/") || posix.extname(joined) === "";
   const path = joined.replace(/\/$/, "");
@@ -40,7 +45,9 @@ function internalRoute(ctx: LinkContext, path: string): string | undefined {
 
 function githubUrl(ctx: LinkContext, path: string, isDir: boolean): string {
   const kind = isDir ? "tree" : "blob";
-  return path ? `${ctx.repoUrl}/${kind}/${ctx.commit}/${path}` : `${ctx.repoUrl}/tree/${ctx.commit}`;
+  return path
+    ? `${ctx.repoUrl}/${kind}/${ctx.commit}/${path}`
+    : `${ctx.repoUrl}/tree/${ctx.commit}`;
 }
 
 export function rewriteUrl(url: string, ctx: LinkContext): string {

@@ -9,5 +9,8 @@ export function isNextArrow(text: string): boolean {
 }
 
 export function stripNextArrow(tree: Root): Root {
-  return filterRootChildren(tree, (node) => !(isParagraph(node) && isNextArrow(nodeText(node))));
+  return filterRootChildren(
+    tree,
+    (node) => !(isParagraph(node) && isNextArrow(nodeText(node))),
+  );
 }

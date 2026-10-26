@@ -21,7 +21,12 @@ function statusFor(before: string | undefined, after: string | undefined): Chang
   return before === after ? "UNCHANGED" : "CHANGED";
 }
 
-const EMPTY_COUNTS: Record<ChangeStatus, number> = { NEW: 0, CHANGED: 0, REMOVED: 0, UNCHANGED: 0 };
+const EMPTY_COUNTS: Record<ChangeStatus, number> = {
+  NEW: 0,
+  CHANGED: 0,
+  REMOVED: 0,
+  UNCHANGED: 0,
+};
 
 /** Pure comparison of current file hashes against the locked ones. */
 export function compareHashes(current: HashMap, locked: HashMap): Comparison {
@@ -42,7 +47,9 @@ export function compareHashes(current: HashMap, locked: HashMap): Comparison {
 /** Fixed-width table for the terminal and the markdown report. */
 export function formatChangeTable(comparison: Comparison): string {
   const width = Math.max(4, ...comparison.changes.map((c) => c.path.length));
-  const rows = comparison.changes.map((c) => `| ${c.status.padEnd(9)} | ${c.path.padEnd(width)} |`);
+  const rows = comparison.changes.map(
+    (c) => `| ${c.status.padEnd(9)} | ${c.path.padEnd(width)} |`,
+  );
   const header = `| ${"status".padEnd(9)} | ${"path".padEnd(width)} |`;
   const rule = `| ${"-".repeat(9)} | ${"-".repeat(width)} |`;
   return [header, rule, ...rows].join("\n");

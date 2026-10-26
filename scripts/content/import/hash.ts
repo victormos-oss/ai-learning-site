@@ -3,8 +3,22 @@ import { readFileSync } from "node:fs";
 import { extname } from "node:path";
 
 const TEXT_EXTENSIONS = new Set([
-  ".md", ".mdx", ".py", ".svg", ".txt", ".json", ".yaml", ".yml",
-  ".ts", ".js", ".sh", ".toml", ".cfg", ".csv", ".html", ".css",
+  ".md",
+  ".mdx",
+  ".py",
+  ".svg",
+  ".txt",
+  ".json",
+  ".yaml",
+  ".yml",
+  ".ts",
+  ".js",
+  ".sh",
+  ".toml",
+  ".cfg",
+  ".csv",
+  ".html",
+  ".css",
 ]);
 
 export function isTextFile(filePath: string): boolean {
@@ -21,7 +35,9 @@ export function sha256(data: string | Buffer): string {
 
 /** Text files are hashed after CRLF -> LF so Windows checkouts agree with Linux. */
 export function hashContent(content: Buffer, filePath: string): string {
-  return isTextFile(filePath) ? sha256(normalizeNewlines(content.toString("utf8"))) : sha256(content);
+  return isTextFile(filePath)
+    ? sha256(normalizeNewlines(content.toString("utf8")))
+    : sha256(content);
 }
 
 export function hashFile(absolutePath: string): string {

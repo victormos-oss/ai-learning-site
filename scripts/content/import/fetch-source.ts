@@ -7,7 +7,10 @@ import type { SourceEntry } from "../lib/sources-schema";
  * for now: `--from-local <dir>` points at the folder that holds them, and
  * `source.local` names the clone inside it.
  */
-export function resolveCloneDir(source: SourceEntry, fromLocal: string | undefined): string {
+export function resolveCloneDir(
+  source: SourceEntry,
+  fromLocal: string | undefined,
+): string {
   if (!fromLocal) {
     throw new Error(
       [

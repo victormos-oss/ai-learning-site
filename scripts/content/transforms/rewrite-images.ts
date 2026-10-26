@@ -31,7 +31,9 @@ function splitImageUrl(url: string): { dir: string; base: string; ext: string } 
 /** `.en` variant first, then the file without a locale suffix. */
 function chooseFile(url: string, available: ReadonlySet<string>): AssetRef | undefined {
   const { dir, base, ext } = splitImageUrl(url);
-  const candidates = [`${base}.en${ext}`, `${base}${ext}`].map((name) => posix.join(dir, name));
+  const candidates = [`${base}.en${ext}`, `${base}${ext}`].map((name) =>
+    posix.join(dir, name),
+  );
   const file = candidates.find((candidate) => available.has(candidate));
   return file ? { base, file, target: `assets/${base}.en${ext}` } : undefined;
 }
@@ -50,7 +52,10 @@ function isImageOnlyParagraph(node: Node): node is Paragraph {
  * Replaces `![alt](images/x.en.svg)` with `<Figure src="x" alt="alt" />`.
  * `availableFiles` are upstream paths relative to the section folder.
  */
-export function rewriteImages(tree: Root, availableFiles: readonly string[]): ImageRewriteResult {
+export function rewriteImages(
+  tree: Root,
+  availableFiles: readonly string[],
+): ImageRewriteResult {
   const available = new Set(availableFiles.map((file) => file.replaceAll("\\", "/")));
   const assets = new Map<string, AssetRef>();
   const warnings: string[] = [];
@@ -61,16 +66,31 @@ export function rewriteImages(tree: Root, availableFiles: readonly string[]): Im
       warnings.push(`image "${image.url}" has no matching upstream file`);
       return undefined;
     }
+    const existing = assets.get(chosen.base);
+    if (existing && existing.file !== chosen.file) {
+      throw new Error(
+        `asset name collision: "${existing.file}" and "${chosen.file}" would both become <Figure src="${chosen.base}">`,
+      );
+    }
     assets.set(chosen.base, chosen);
     const type = flow ? "mdxJsxFlowElement" : "mdxJsxTextElement";
     return jsxElement("Figure", { src: chosen.base, alt: image.alt ?? "" }, type);
   };
 
+  // External and data: images would make readers fetch third-party hosts;
+  // they are dropped with a warning and only their alt text stays.
+  const dropExternal = (image: Image): Node => {
+    warnings.push(`external image "${image.url.slice(0, 80)}" removed`);
+    return { type: "text", value: image.alt ? `[${image.alt}]` : "" } as Node;
+  };
+
   // Returning the node itself keeps it and stops the descent, so an
   // unresolved image inside a paragraph is reported only once.
   const mapped = mapTree(tree, (node) => {
-    if (isImageOnlyParagraph(node)) return figureFor(node.children[0] as Image, true) ?? node;
+    if (isImageOnlyParagraph(node))
+      return figureFor(node.children[0] as Image, true) ?? node;
     if (isLocalImage(node)) return figureFor(node, false) ?? node;
+    if (node.type === "image") return dropExternal(node as Image);
     return undefined;
   });
   return { tree: mapped, assets: [...assets.values()], warnings };

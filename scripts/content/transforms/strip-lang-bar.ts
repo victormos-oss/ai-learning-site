@@ -14,7 +14,8 @@ export function isLangBar(paragraph: Paragraph): boolean {
   const onlyReadmeLinks = links.every((link) => README_LINK.test(link.url));
   const onlySeparators = paragraph.children.every(
     (child) =>
-      child.type === "link" || (child.type === "text" && SEPARATORS_ONLY.test(child.value)),
+      child.type === "link" ||
+      (child.type === "text" && SEPARATORS_ONLY.test(child.value)),
   );
   return onlyReadmeLinks && onlySeparators;
 }

@@ -1,11 +1,23 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  readFileSync,
+  realpathSync,
+  writeFileSync,
+} from "node:fs";
 import { merge } from "node-diff3";
-import { dirname, join, posix, relative } from "node:path";
+import { dirname, join, posix, relative, sep } from "node:path";
 import { expandGlob } from "../lib/glob";
-import { entryDir, entryRelative, type Mapping, type MappingEntry } from "../lib/mapping-schema";
+import {
+  entryDir,
+  entryRelative,
+  type Mapping,
+  type MappingEntry,
+} from "../lib/mapping-schema";
 import type { SourceEntry } from "../lib/sources-schema";
 import { transformLesson, type TransformResult } from "../transforms";
-import { sanitizeSvg } from "../transforms/sanitize-svg";
+import { looksLikeSvg, sanitizeSvg } from "../transforms/sanitize-svg";
 import { normalizeNewlines } from "./hash";
 import { lessonDir, upstreamFile, type ProjectPaths } from "./paths";
 
@@ -33,14 +45,42 @@ export interface EntryApplyResult {
   warnings: string[];
 }
 
-export const EMPTY_RESULT: EntryApplyResult = { written: [], proposed: [], conflicts: [], warnings: [] };
+export const EMPTY_RESULT: EntryApplyResult = {
+  written: [],
+  proposed: [],
+  conflicts: [],
+  warnings: [],
+};
+
+/**
+ * The clone is untrusted: a mapped path must be a regular file (no symlink)
+ * whose real location stays inside the clone. Returns the absolute path.
+ */
+export function assertRegularFileInside(rootDir: string, relativePath: string): string {
+  const full = join(rootDir, relativePath);
+  const stat = lstatSync(full, { throwIfNoEntry: false });
+  if (!stat || !stat.isFile()) {
+    throw new Error(`"${relativePath}" is not a regular file in the upstream clone`);
+  }
+  const realRoot = realpathSync(rootDir);
+  const real = realpathSync(full);
+  if (real !== realRoot && !real.startsWith(realRoot + sep)) {
+    throw new Error(`"${relativePath}" resolves outside the upstream clone`);
+  }
+  return full;
+}
 
 export function collectEntryFiles(cloneDir: string, entry: MappingEntry): EntryFiles {
   const code = entry.code ? entryRelative(entry, entry.code) : undefined;
   if (code && !existsSync(join(cloneDir, code))) {
     throw new Error(`${entry.key}: mapped code file "${code}" is missing upstream`);
   }
-  const assets = entry.assets.flatMap((pattern) => expandGlob(cloneDir, entryRelative(entry, pattern)));
+  assertRegularFileInside(cloneDir, entry.from);
+  if (code) assertRegularFileInside(cloneDir, code);
+  const assets = entry.assets.flatMap((pattern) =>
+    expandGlob(cloneDir, entryRelative(entry, pattern)),
+  );
+  assets.forEach((asset) => assertRegularFileInside(cloneDir, asset));
   return { readme: entry.from, ...(code ? { code } : {}), assets };
 }
 
@@ -74,7 +114,9 @@ function transformReadme(
   commit: string,
 ): TransformResult {
   const dir = entryDir(entry);
-  const assetFiles = files.assets.map((asset) => (dir ? posix.relative(dir, asset) : asset));
+  const assetFiles = files.assets.map((asset) =>
+    dir ? posix.relative(dir, asset) : asset,
+  );
   return transformLesson({
     markdown,
     entry,
@@ -86,20 +128,30 @@ function transformReadme(
   });
 }
 
-function writeLessonAssets(ctx: ApplyContext, entry: MappingEntry, result: TransformResult, dir: string): string[] {
+function writeLessonAssets(
+  ctx: ApplyContext,
+  entry: MappingEntry,
+  result: TransformResult,
+  dir: string,
+): string[] {
   return result.assets.map((asset) => {
-    const from = join(ctx.cloneDir, entryRelative(entry, asset.file));
+    const from = assertRegularFileInside(ctx.cloneDir, entryRelative(entry, asset.file));
     const target = join(dir, asset.target);
-    // Only SVG is text; every other asset (png, webp) is copied as raw bytes.
+    // SVG (by extension in any case, or by content) is sanitized; other assets are raw bytes.
     const raw = readFileSync(from);
-    const content = asset.file.endsWith(".svg") ? sanitizeSvg(raw.toString("utf8")) : raw;
+    const isSvg = /\.svg$/i.test(asset.file) || looksLikeSvg(raw);
+    const content = isSvg ? sanitizeSvg(raw.toString("utf8")) : raw;
     mkdirSync(dirname(target), { recursive: true });
     writeFileSync(target, content);
     return relativeToRoot(ctx, target);
   });
 }
 
-function threeWayMerge(ours: string, base: string, theirs: string): { text: string; conflict: boolean } {
+function threeWayMerge(
+  ours: string,
+  base: string,
+  theirs: string,
+): { text: string; conflict: boolean } {
   const lines = (text: string) => normalizeNewlines(text).split("\n");
   const merged = merge(lines(ours), lines(base), lines(theirs), {
     label: { a: "ours (en.mdx)", o: "base", b: "upstream" },
@@ -130,7 +182,8 @@ function writeLessonMdx(ctx: ApplyContext, input: MdxInput): MdxOutcome {
     writeText(target, input.result.mdx);
     return "written";
   }
-  if (normalizeNewlines(existing) === normalizeNewlines(input.result.mdx)) return "unchanged";
+  if (normalizeNewlines(existing) === normalizeNewlines(input.result.mdx))
+    return "unchanged";
   const upstreamUnchanged =
     input.previousMarkdown !== undefined &&
     normalizeNewlines(input.previousMarkdown) === normalizeNewlines(input.markdown);
@@ -140,31 +193,62 @@ function writeLessonMdx(ctx: ApplyContext, input: MdxInput): MdxOutcome {
     return "proposed";
   }
   const baseCommit = ctx.previousCommit ?? ctx.commit;
-  const base = transformReadme(ctx, input.entry, input.previousMarkdown, input.files, baseCommit).mdx;
+  const base = transformReadme(
+    ctx,
+    input.entry,
+    input.previousMarkdown,
+    input.files,
+    baseCommit,
+  ).mdx;
   const merged = threeWayMerge(existing, base, input.result.mdx);
   writeText(`${target}.proposed`, merged.text);
   return merged.conflict ? "conflict" : "proposed";
 }
 
-/** Imports one lesson: upstream copy, assets, code, and en.mdx (or a merge proposal). */
+/**
+ * Imports one lesson: assets, code and en.mdx (or a merge proposal). The
+ * pinned upstream copy is refreshed last, only after the lesson files were
+ * written, so a failure half-way never makes a later run believe the
+ * upstream change was already applied.
+ */
 export function applyEntry(ctx: ApplyContext, entry: MappingEntry): EntryApplyResult {
   const files = collectEntryFiles(ctx.cloneDir, entry);
-  const previousMarkdown = readIfExists(upstreamFile(ctx.paths, ctx.source.id, files.readme));
-  for (const path of listEntryPaths(files)) {
-    copyRaw(join(ctx.cloneDir, path), upstreamFile(ctx.paths, ctx.source.id, path));
-  }
-  const markdown = readFileSync(join(ctx.cloneDir, files.readme), "utf8");
+  const previousMarkdown = readIfExists(
+    upstreamFile(ctx.paths, ctx.source.id, files.readme),
+  );
+  const markdown = readFileSync(
+    assertRegularFileInside(ctx.cloneDir, files.readme),
+    "utf8",
+  );
   const result = transformReadme(ctx, entry, markdown, files, ctx.commit);
   const dir = lessonDir(ctx.paths, ctx.mapping.track, entry);
 
   const assetPaths = writeLessonAssets(ctx, entry, result, dir);
-  const codePaths = files.code ? [join(dir, posix.basename(files.code))] : [];
-  codePaths.forEach((target) => copyRaw(join(ctx.cloneDir, files.code ?? ""), target));
+  const codePaths: string[] = [];
+  if (files.code) {
+    const target = join(dir, posix.basename(files.code));
+    copyRaw(assertRegularFileInside(ctx.cloneDir, files.code), target);
+    codePaths.push(target);
+  }
 
-  const outcome = writeLessonMdx(ctx, { entry, files, markdown, previousMarkdown, result, dir });
+  const outcome = writeLessonMdx(ctx, {
+    entry,
+    files,
+    markdown,
+    previousMarkdown,
+    result,
+    dir,
+  });
+  for (const path of listEntryPaths(files)) {
+    copyRaw(join(ctx.cloneDir, path), upstreamFile(ctx.paths, ctx.source.id, path));
+  }
   const mdx = relativeToRoot(ctx, join(dir, "en.mdx"));
   return {
-    written: [...assetPaths, ...codePaths.map((p) => relativeToRoot(ctx, p)), ...(outcome === "written" ? [mdx] : [])],
+    written: [
+      ...assetPaths,
+      ...codePaths.map((p) => relativeToRoot(ctx, p)),
+      ...(outcome === "written" ? [mdx] : []),
+    ],
     proposed: outcome === "proposed" || outcome === "conflict" ? [`${mdx}.proposed`] : [],
     conflicts: outcome === "conflict" ? [`${mdx}.proposed`] : [],
     warnings: result.warnings.map((warning) => `${entry.key}: ${warning}`),

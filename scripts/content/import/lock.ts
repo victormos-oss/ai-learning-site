@@ -26,7 +26,9 @@ export function readLock(filePath: string): LockFile {
 
 function sortedRecord<T>(record: Readonly<Record<string, T>>): Record<string, T> {
   // Byte-order compare keeps the lock identical across machines and locales.
-  return Object.fromEntries(Object.entries(record).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)));
+  return Object.fromEntries(
+    Object.entries(record).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)),
+  );
 }
 
 export interface LockUpdate {

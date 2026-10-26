@@ -10,8 +10,12 @@ const TRY_IT_HEADING = /^(try it|try it out|run it|running it|try this)\b/i;
  */
 export function inlineCodeFile(tree: Root, codeFile: string | undefined): Root {
   if (!codeFile) return tree;
-  const element = jsxElement("CodeFile", { src: posix.basename(codeFile) }) as RootContent;
-  const section = findSection(tree, (heading) => TRY_IT_HEADING.test(nodeText(heading).trim()));
+  const element = jsxElement("CodeFile", {
+    src: posix.basename(codeFile),
+  }) as RootContent;
+  const section = findSection(tree, (heading) =>
+    TRY_IT_HEADING.test(nodeText(heading).trim()),
+  );
   const end = section ? section.end : tree.children.length;
   // Upstream separates sections with `---`; keep the code inside the section.
   const at = tree.children[end - 1]?.type === "thematicBreak" ? end - 1 : end;

@@ -36,7 +36,9 @@ export function parseTitle(raw: string): ParsedTitle {
   const [title, subtitle] =
     dashRest === undefined ? splitOnce(byDash, COLON_SEPARATOR) : [byDash, dashRest];
   const cleanSubtitle = subtitle ? replaceLongDashes(subtitle) : undefined;
-  return cleanSubtitle ? { title: replaceLongDashes(title), subtitle: cleanSubtitle } : { title: replaceLongDashes(title) };
+  return cleanSubtitle
+    ? { title: replaceLongDashes(title), subtitle: cleanSubtitle }
+    : { title: replaceLongDashes(title) };
 }
 
 function truncate(text: string): string {
@@ -46,7 +48,8 @@ function truncate(text: string): string {
 
 function firstParagraphText(tree: Root): string | undefined {
   const paragraph = tree.children.find(
-    (node) => isParagraph(node) && !node.children.every((child) => child.type === "image"),
+    (node) =>
+      isParagraph(node) && !node.children.every((child) => child.type === "image"),
   );
   return paragraph ? nodeText(paragraph) : undefined;
 }
@@ -56,7 +59,14 @@ export function extractTitle(tree: Root): TitleResult {
   const index = tree.children.findIndex((node) => isHeading(node, 1));
   if (index === -1) throw new Error("Lesson source has no H1 heading");
   const parsed = parseTitle(nodeText(tree.children[index]!));
-  const body = withChildren(tree, tree.children.filter((_, i) => i !== index));
+  const body = withChildren(
+    tree,
+    tree.children.filter((_, i) => i !== index),
+  );
   const summary = parsed.subtitle ?? firstParagraphText(body) ?? parsed.title;
-  return { tree: body, title: parsed.title, summary: truncate(replaceLongDashes(summary)) };
+  return {
+    tree: body,
+    title: parsed.title,
+    summary: truncate(replaceLongDashes(summary)),
+  };
 }

@@ -14,5 +14,8 @@ export function isNavChain(text: string): boolean {
 }
 
 export function stripNavChain(tree: Root): Root {
-  return filterRootChildren(tree, (node) => !(isParagraph(node) && isNavChain(nodeText(node))));
+  return filterRootChildren(
+    tree,
+    (node) => !(isParagraph(node) && isNavChain(nodeText(node))),
+  );
 }
