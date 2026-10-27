@@ -28,16 +28,20 @@ type Props = { webinars: WebinarItem[]; locale: string; labels: Labels };
 
 const noop = () => () => {};
 
+/* Read once per page load: React requires the snapshot to be stable between calls. */
+let clientNow = 0;
+function getClientNow(): number {
+  if (clientNow === 0) clientNow = Date.now();
+  return clientNow;
+}
+const getServerNow = () => 0;
+
 /**
  * Past and upcoming are decided on the client, so a static page never goes
  * stale between builds. Times render in the viewer's zone via Intl.
  */
 export function WebinarList({ webinars, locale, labels }: Props) {
-  const now = useSyncExternalStore(
-    noop,
-    () => Date.now(),
-    () => 0,
-  );
+  const now = useSyncExternalStore(noop, getClientNow, getServerNow);
   const isServer = now === 0;
   const upcoming = webinars.filter((w) => isServer || Date.parse(w.startsAt) >= now);
   const past = webinars.filter((w) => !isServer && Date.parse(w.startsAt) < now);

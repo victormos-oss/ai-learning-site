@@ -11,6 +11,7 @@ import {
   getTracks,
 } from "@/features/content/loader";
 import { pickLocalized } from "@/features/content/resolve";
+import { LessonStatusBadge } from "@/features/progress";
 
 type Params = { locale: string; track: string };
 type Props = { params: Promise<Params> };
@@ -87,7 +88,8 @@ export default async function TrackPage({ params }: Props) {
                           {String(index + 1).padStart(2, "0")}
                         </span>
                         <span>
-                          <span className="font-semibold">{lesson.title}</span>
+                          <span className="font-semibold">{lesson.title}</span>{" "}
+                          <LessonStatusBadge lessonKey={lesson.key} className="ml-1" />
                           <span className="block text-sm text-ink-muted">
                             {lesson.summary}
                           </span>

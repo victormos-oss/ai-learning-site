@@ -19,6 +19,9 @@
   "resetYes": "Sí, borrar",
   "resetNo": "Cancelar",
   "storageWarning": "El almacenamiento del navegador no está disponible aquí, el progreso no se guardará al salir.",
+  "exportError": "No se pudo exportar el archivo en este navegador.",
+  "importTooLarge": "El archivo supera los 256 KB y no parece una exportación de progreso.",
+  "resetDone": "Progreso borrado",
   "status": {
     "completed": "Completada",
     "started": "Empezada",

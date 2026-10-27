@@ -1,6 +1,20 @@
 {
   "version": 1,
   "sources": {
+    "cc-best-practices-usman": {
+      "commit": "8e7d4bf8ed384d08bdbb23f8408ec715fc259bc3",
+      "updatedAt": "2026-10-26T20:19:49.559Z",
+      "files": {
+        "guides/auto-mode.md": "sha256:de45d1f8c953ed456a77ed536b6b45147bd75d480332dfffdc3bc6b7019dcddf",
+        "guides/claude-md-guide.md": "sha256:4b6cc013922874a0482513c10217daa86394d8a17ff2236d04338cca5f5732c1",
+        "guides/common-mistakes.md": "sha256:12913d32d4c413663247ccc7fe4655cef8086050a5953651100cc84ef4f5e08f",
+        "guides/context-management.md": "sha256:1485d56d8d502e613bb3198030d0f44fc1a14585d401549f8d058e4bc45a1394",
+        "guides/cost-management.md": "sha256:939342c819e655b28ed90c5e8940efcb86c97b9f80a1904bcf940487f14b4264",
+        "guides/getting-started.md": "sha256:7bd5bda7881e8ce27530fd739ebc33cdc4ce23961886f623fce8ee0fe8cb5f2e",
+        "guides/permission-modes.md": "sha256:dbfb2734b3932c34240373dfd927dcf2435dd242e9a2d05167fd8016c56be8b0",
+        "guides/prompt-tips.md": "sha256:3db3a0689f7317bccf1cab288288295c947108d7af2dfac2bfe5b8ec4effa0b7"
+      }
+    },
     "learn-claude-code": {
       "commit": "ce8f9f186058939da54c9d6fead78dfb5d0fd6c3",
       "updatedAt": "2026-10-26T14:30:12.483Z",

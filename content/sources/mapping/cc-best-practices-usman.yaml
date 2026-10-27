@@ -1,0 +1,59 @@
+# Mapping "upstream guide -> lesson" for MuhammadUsmanGM/claude-code-best-practices.
+# from:     main guide, relative to the clone root (must satisfy include/exclude in sources.yaml)
+# alsoFrom: extra guides of the same source, appended after the main one under an H2 each;
+#           hashed into sources.lock.json and watched by --check like `from`
+# type:     learn | build | practice, copied into the lesson frontmatter
+# estimatedMinutes: ~1 minute per 180 words of all files, rounded up to 5
+#
+# Lesson 05 (practice-landing) is original content written by hand in
+# content/tracks/claude-code-zero/modules/01-getting-started/lessons/05-practice-landing/en.mdx
+# and is deliberately absent here, so the import never touches it.
+
+source: cc-best-practices-usman
+track: claude-code-zero
+
+entries:
+  - from: guides/getting-started.md
+    key: cc-zero.install
+    module: 01-getting-started
+    slug: install
+    order: 1
+    type: learn
+    estimatedMinutes: 5
+
+  - from: guides/prompt-tips.md
+    key: cc-zero.first-task
+    module: 01-getting-started
+    slug: first-task
+    order: 2
+    type: learn
+    estimatedMinutes: 5
+
+  - from: guides/claude-md-guide.md
+    key: cc-zero.claude-md
+    module: 01-getting-started
+    slug: claude-md
+    order: 3
+    type: learn
+    estimatedMinutes: 5
+
+  - from: guides/permission-modes.md
+    alsoFrom:
+      - guides/auto-mode.md
+    key: cc-zero.permission-modes
+    module: 01-getting-started
+    slug: permission-modes
+    order: 4
+    type: learn
+    estimatedMinutes: 15
+
+  - from: guides/context-management.md
+    alsoFrom:
+      - guides/cost-management.md
+      - guides/common-mistakes.md
+    key: cc-zero.context-and-cost
+    module: 01-getting-started
+    slug: context-and-cost
+    order: 6
+    type: learn
+    estimatedMinutes: 20

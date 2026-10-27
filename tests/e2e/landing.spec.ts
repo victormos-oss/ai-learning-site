@@ -13,7 +13,7 @@ test.describe("landing board", () => {
     const firstRow = board.getByRole("link").first();
     await expect(firstRow).toHaveAttribute(
       "href",
-      /\/ru\/tracks\/claude-code-zero\/agent-loop$/,
+      /\/ru\/tracks\/claude-code-zero\/install$/,
     );
     await expect(firstRow).toHaveAccessibleName(/01 .*Отправляется/);
     await expectNoA11yViolations(page);
@@ -38,7 +38,14 @@ test.describe("landing board", () => {
       .getByRole("link", { name: /Русский/ })
       .click();
     await expect(page).toHaveURL(/\/ru$/);
-    const running = await page.evaluate(() => document.getAnimations().length);
+    // Only the board plates matter here; dev-tool overlays may animate on their own.
+    const running = await page.evaluate(
+      () =>
+        document.getAnimations().filter((animation) => {
+          const target = (animation.effect as KeyframeEffect | null)?.target;
+          return target instanceof Element && target.closest(".flap-text") !== null;
+        }).length,
+    );
     expect(running).toBe(0);
   });
 });

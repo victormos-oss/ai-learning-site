@@ -1,0 +1,293 @@
+---
+key: cc-zero.permission-modes
+slug: permission-modes
+title: Permission Modes
+summary: Claude Code operates within a permission system that controls which tools and actions it can take without asking for approval. Understanding these modes lets you balance safety with speed depending on your task and comfort level.
+order: 4
+estimatedMinutes: 15
+type: learn
+quiz: false
+attribution:
+  - source: MuhammadUsmanGM/claude-code-best-practices
+    path: guides/permission-modes.md
+    commit: 8e7d4bf8ed384d08bdbb23f8408ec715fc259bc3
+    license: MIT
+    authors: Muhammad Usman and contributors
+    url: https://github.com/MuhammadUsmanGM/claude-code-best-practices/tree/8e7d4bf8ed384d08bdbb23f8408ec715fc259bc3/guides
+    relation: adapted
+---
+
+Claude Code operates within a permission system that controls which tools and actions it can take without asking for approval. Understanding these modes lets you balance safety with speed depending on your task and comfort level.
+
+## Overview
+
+By default, Claude Code asks for your approval before performing actions that modify files, run commands, or interact with external services. You can adjust these permissions to be more restrictive (plan mode) or more permissive (allowlisted tools, or the fully autonomous mode).
+
+## Default Mode
+
+In the default interactive mode, Claude Code will:
+
+- **Automatically allow**: Reading files, searching code, listing directories
+- **Ask permission for**: Writing/editing files, running shell commands, making Git operations
+
+Each time Claude wants to perform a restricted action, you see a prompt:
+
+```
+Claude wants to edit src/services/auth.ts
+[Allow] [Deny] [Allow All]
+```
+
+- **Allow**: Approve this single action.
+- **Deny**: Reject the action. Claude will adjust its approach.
+- **Allow All**: Allow this type of action for the rest of the session.
+
+### When to use
+
+Default mode is ideal for most development tasks. It gives you full visibility into what Claude is doing while still being efficient for standard workflows.
+
+## Plan Mode
+
+Plan mode prevents Claude from making any changes. It can only read code and propose a plan.
+
+### Activating plan mode
+
+Start a session in plan mode:
+
+```bash
+claude --plan
+```
+
+Or switch to plan mode during a session by typing:
+
+```
+/plan
+```
+
+Switch back to normal mode with:
+
+```
+/execute
+```
+
+### What Claude can do in plan mode
+
+- Read and analyze files
+- Search the codebase
+- Propose changes (without applying them)
+- Outline implementation steps
+
+### What Claude cannot do in plan mode
+
+- Edit or create files
+- Run shell commands
+- Make Git commits
+- Execute any side effects
+
+### When to use
+
+- **Large refactors**: Review the plan before Claude touches dozens of files.
+- **Unfamiliar codebases**: Explore and understand before making changes.
+- **Architecture decisions**: Have Claude analyze trade-offs without committing to an approach.
+- **Risky operations**: Database migrations, dependency changes, or security-sensitive code.
+- **Learning**: Understand how Claude would approach a problem without modifying anything.
+
+## Allowlisted Tools
+
+You can pre-approve specific tools so Claude doesn't ask permission each time.
+
+### Via CLI flags
+
+```bash
+claude --allowedTools "Edit,Write,Bash(npm test)"
+```
+
+This allows Claude to edit files, write new files, and run `npm test` without asking, while still requiring permission for other commands.
+
+### Via CLAUDE.md
+
+Add an `allowedTools` section to your project's CLAUDE.md or settings:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Edit",
+      "Write",
+      "Bash(npm test)",
+      "Bash(npm run lint)"
+    ]
+  }
+}
+```
+
+### Common allowlist patterns
+
+| Pattern                        | Effect                        |
+| ------------------------------ | ----------------------------- |
+| `Edit`                         | Allow all file edits          |
+| `Write`                        | Allow creating new files      |
+| `Bash(npm test)`               | Allow running `npm test` only |
+| `Bash(git status)`             | Allow checking git status     |
+| `Bash(npx prettier --write *)` | Allow formatting              |
+
+### When to use
+
+Allowlisting is ideal when you trust Claude with routine operations but want guardrails on potentially destructive actions. It removes friction for common tasks while keeping you in control.
+
+## Dangerously Skip Permissions
+
+This mode disables all permission checks. Claude can read, write, execute, and commit without any prompts.
+
+```bash
+claude --dangerously-skip-permissions
+```
+
+### Risks
+
+- Claude can run arbitrary shell commands without confirmation.
+- Files can be overwritten or deleted without prompting.
+- Git commits and pushes happen automatically.
+- No opportunity to review changes before they are applied.
+
+### When to use
+
+- **CI/CD pipelines**: Automated environments where no human is present to approve actions.
+- **Disposable environments**: Docker containers, VMs, or codespaces where damage is easily reversed.
+- **Trusted, repetitive scripts**: Batch operations you've already validated and want to run unattended.
+
+This mode is never recommended for interactive development on a codebase you care about. Always prefer allowlisted tools or default mode for regular work.
+
+## Choosing the Right Mode
+
+| Scenario                         | Recommended Mode                             |
+| -------------------------------- | -------------------------------------------- |
+| Day-to-day development           | Default, or auto mode on Pro/Max/Team        |
+| Exploring a new codebase         | Plan mode                                    |
+| Routine tasks you've done before | Allowlisted tools                            |
+| Planning a large refactor        | Plan mode, then switch to default            |
+| CI/CD automation                 | Dangerously skip permissions (in containers) |
+| Pair programming with Claude     | Default with selective allows                |
+| Reviewing someone else's PR      | Plan mode                                    |
+
+Auto mode deserves its own treatment -- it replaces per-action prompts with a safety classifier plus sandboxing and changes several adjacent behaviors (inline `!` commands, subagent hand-backs, Monitor deadlines). See [Auto Mode](/tracks/claude-code-zero/permission-modes) for the full picture.
+
+## Combining Modes in a Session
+
+A typical session might use multiple modes:
+
+1. **Start in plan mode** to understand the scope of a task.
+2. **Switch to default mode** to implement the changes with review.
+3. **Allowlist `Bash(npm test)`** so Claude can run tests freely while you review edits.
+
+This layered approach gives you maximum safety without sacrificing productivity.
+
+## Auto Mode
+
+Auto mode (research preview, March 2026; default for Pro, Max, and Team plans since August 2026) replaces the approve-everything loop with a background safety classifier. Instead of prompting you for each edit or command, Claude Code decides per action: clearly safe work proceeds on its own, everything else still asks you.
+
+### How it differs from the modes you know
+
+| Mode                             | Who approves routine actions            | Safety net                                            |
+| -------------------------------- | --------------------------------------- | ----------------------------------------------------- |
+| Default                          | You, every time                         | None needed                                           |
+| Allowlisted tools                | Pre-approved patterns run; rest prompts | Your allowlist                                        |
+| Auto mode                        | The safety classifier                   | Sandboxing + classifier, still prompts for risky work |
+| `--dangerously-skip-permissions` | Nobody                                  | None -- you are the safety net                        |
+
+Auto mode is not a rebrand of bypass permissions. Bypass removes the gate; auto mode adds a reviewer that never gets tired. The residual prompt traffic drops by an order of magnitude on ordinary feature work, but destructive commands, unknown network hosts, and ambiguous actions still stop for you.
+
+### What the classifier actually does
+
+Each candidate action -- a Bash command, an edit, a subagent hand-back -- is evaluated against your permission rules plus a trained safety model. Three outcomes:
+
+- **Allow** -- the action runs without a prompt.
+- **Ask** -- you get the normal permission prompt.
+- **Deny** -- the action is refused with the classifier's reason.
+
+Sandboxing makes the allow decision cheap to trust. Commands run in a restricted environment where filesystem writes outside the working tree and network access outside an allowlist fail on their own, so a mis-classified command cannot do the damage it would do unsandboxed.
+
+#### Per-command network domains
+
+v2.1.271 added `allowed_domains` per command for Bash, PowerShell, and Monitor under auto mode with sandboxing. The hosts a command needs are reviewed with that command and opened for it alone; other hosts are refused. This closes the older hole where a one-time broad network grant leaked to every later command in the session.
+
+### Enabling and controlling it
+
+Cycle modes in a session with `Shift+Tab`; auto mode appears as its own stop in the cycle. To set it for future sessions:
+
+```bash
+claude config set --global preferredPermissionMode auto
+```
+
+To keep auto mode but re-prompt for a class of actions, add explicit `ask` rules -- explicit rules beat the classifier:
+
+```json
+{
+  "permissions": {
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(terraform:*)",
+      "WebFetch"
+    ]
+  }
+}
+```
+
+To leave auto mode for a session, `Shift+Tab` back to manual (default). Organization policy can disable auto mode entirely, in which case the setting is hidden and sessions stay in default mode.
+
+Quick reference:
+
+| Goal                              | How                                                          |
+| --------------------------------- | ------------------------------------------------------------ |
+| Try auto mode for one session     | `Shift+Tab` until auto mode is selected                      |
+| Keep auto mode across sessions    | `claude config set --global preferredPermissionMode auto`    |
+| Always prompt for a command class | `permissions.ask` rule in settings                           |
+| Always allow a command class      | `permissions.allow` rule in settings                         |
+| Turn it off for good              | `claude config set --global preferredPermissionMode default` |
+
+### Adjusting the behavior, not just the mode
+
+#### Inline `!` commands
+
+Auto mode changed how inline shell snippets in skills and slash commands are judged: they follow default-mode permission rules instead of the classifier. A command no rule decides runs as a reviewed tool call. If you write skills, this matters -- your `!` prefixed setup commands will prompt unless they match an allow rule.
+
+#### Subagent hand-backs
+
+A subagent reports back to its caller through a dedicated hand-back call that the classifier reviews, rather than its last message being reviewed after the fact. In practice this means a subagent that went off-script gets caught at the boundary, not after its summary was already accepted.
+
+#### Monitor watches
+
+Monitor watches always have a deadline now -- at most 30 minutes, 10 minutes in single-prompt `-p` runs -- and notify Claude to re-arm when they expire. The old no-timeout persistent watch is gone; long-running watchers need explicit re-arm logic.
+
+### Where auto mode fits your workflow
+
+- **Everyday feature work** -- the intended home. Prompts drop to a handful per hour.
+- **Large refactors** -- combine with plan mode first; auto mode does not review the plan, only the actions.
+- **CI and unattended runs** -- still use explicit allowlists plus `--dangerously-skip-permissions` in containers. The classifier is a latency and attention optimization, not an unattended-run guarantee.
+- **Learning a new codebase** -- keep default mode. The prompts are a tour of what Claude is about to touch.
+
+### When the classifier gets it wrong
+
+Two failure directions, two fixes:
+
+- **Denies something safe, repeatedly** -- do not train yourself to approve by reflex. Add an explicit allow rule for the exact pattern (`Bash(npm run test:*)`, not `Bash(*)`). Explicit rules are checked before the classifier, so the deny disappears and the reasoning stays auditable.
+- **Allows something that worries you** -- add an `ask` rule for that command class. You keep the speedup everywhere else, and the sensitive category always stops for a human.
+
+If whole classes of actions misbehave after a Claude Code update, check the release notes before blaming your rules -- auto mode's internals (inline `!` handling, hand-back review, Monitor deadlines) have changed several times since March 2026.
+
+### Tips
+
+- **Write allow rules for your hot path anyway.** Test commands, formatters, and your dev server should be allowlisted even under auto mode -- explicit rules are cheaper to evaluate and fully predictable.
+- **Read the deny reasons.** The classifier surfaces why it refused. A surprising deny usually means the action was more dangerous than it looked, or your rule set contradicts itself.
+- **Do not stack it with bypass.** Auto mode and `--dangerously-skip-permissions` are alternatives, not layers.
+- **Sandboxing is a separate setting.** Auto mode benefits from it but does not force it. Turn sandboxing on explicitly for the protection to apply.
+- **Watch the first hour.** The allow/ask/deny distribution tells you what to allowlist next. If everything is asking, your rules are too thin for auto mode to lean on.
+
+## See Also
+
+- [Getting Started](/tracks/claude-code-zero/install) -- Basic setup and CLI usage
+- [Workflow Patterns](https://github.com/MuhammadUsmanGM/claude-code-best-practices/blob/8e7d4bf8ed384d08bdbb23f8408ec715fc259bc3/guides/workflow-patterns.md) -- Workflows that benefit from mode switching
+- [Tips and Tricks](https://github.com/MuhammadUsmanGM/claude-code-best-practices/blob/8e7d4bf8ed384d08bdbb23f8408ec715fc259bc3/guides/tips-and-tricks.md) -- CLI flags and shortcuts
+- [CI and Automation](https://github.com/MuhammadUsmanGM/claude-code-best-practices/blob/8e7d4bf8ed384d08bdbb23f8408ec715fc259bc3/guides/ci-and-automation.md) -- Using --dangerously-skip-permissions in pipelines and containers
+- [Security Practices](https://github.com/MuhammadUsmanGM/claude-code-best-practices/blob/8e7d4bf8ed384d08bdbb23f8408ec715fc259bc3/guides/security-practices.md) -- Secrets management and safe patterns
+- [Goal Mode](https://github.com/MuhammadUsmanGM/claude-code-best-practices/blob/8e7d4bf8ed384d08bdbb23f8408ec715fc259bc3/guides/goal-mode.md) -- Long-running loops; permission interactions across turns
+- [Auto Mode](/tracks/claude-code-zero/permission-modes) -- The classifier-driven mode; what it approves, what it escalates

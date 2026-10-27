@@ -17,6 +17,8 @@ const entry = (from: string, slug: string, order: number): MappingEntry => ({
   module: "02-one-agent",
   slug,
   order,
+  alsoFrom: [],
+  type: "learn",
   assets: [],
   estimatedMinutes: 5,
 });

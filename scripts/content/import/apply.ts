@@ -16,7 +16,7 @@ import {
   type MappingEntry,
 } from "../lib/mapping-schema";
 import type { SourceEntry } from "../lib/sources-schema";
-import { transformLesson, type TransformResult } from "../transforms";
+import { transformLesson, type ExtraDocument, type TransformResult } from "../transforms";
 import { looksLikeSvg, sanitizeSvg } from "../transforms/sanitize-svg";
 import { normalizeNewlines } from "./hash";
 import { lessonDir, upstreamFile, type ProjectPaths } from "./paths";
@@ -24,8 +24,16 @@ import { lessonDir, upstreamFile, type ProjectPaths } from "./paths";
 /** Upstream files that belong to one mapping entry, relative to the clone root. */
 export interface EntryFiles {
   readme: string;
+  /** `alsoFrom` files, in mapping order. */
+  extras: string[];
   code?: string;
   assets: string[];
+}
+
+/** Markdown inputs of one lesson as read from one place (clone or pinned copy). */
+export interface LessonSource {
+  markdown: string;
+  extras: ExtraDocument[];
 }
 
 export interface ApplyContext {
@@ -76,20 +84,65 @@ export function collectEntryFiles(cloneDir: string, entry: MappingEntry): EntryF
     throw new Error(`${entry.key}: mapped code file "${code}" is missing upstream`);
   }
   assertRegularFileInside(cloneDir, entry.from);
+  entry.alsoFrom.forEach((extra) => assertRegularFileInside(cloneDir, extra));
   if (code) assertRegularFileInside(cloneDir, code);
   const assets = entry.assets.flatMap((pattern) =>
     expandGlob(cloneDir, entryRelative(entry, pattern)),
   );
   assets.forEach((asset) => assertRegularFileInside(cloneDir, asset));
-  return { readme: entry.from, ...(code ? { code } : {}), assets };
+  return {
+    readme: entry.from,
+    extras: entry.alsoFrom,
+    ...(code ? { code } : {}),
+    assets,
+  };
 }
 
 export function listEntryPaths(files: EntryFiles): string[] {
-  return [files.readme, ...(files.code ? [files.code] : []), ...files.assets];
+  return [
+    files.readme,
+    ...files.extras,
+    ...(files.code ? [files.code] : []),
+    ...files.assets,
+  ];
 }
 
 function readIfExists(path: string): string | undefined {
   return existsSync(path) ? readFileSync(path, "utf8") : undefined;
+}
+
+/** Reads README and extras from the clone; every mapped file must exist. */
+function readCloneSource(cloneDir: string, files: EntryFiles): LessonSource {
+  const read = (path: string) =>
+    readFileSync(assertRegularFileInside(cloneDir, path), "utf8");
+  return {
+    markdown: read(files.readme),
+    extras: files.extras.map((path) => ({ path, markdown: read(path) })),
+  };
+}
+
+/** Reads the pinned copy; `undefined` when any file is missing, so no merge base is guessed. */
+function readPinnedSource(
+  ctx: ApplyContext,
+  files: EntryFiles,
+): LessonSource | undefined {
+  const read = (path: string) =>
+    readIfExists(upstreamFile(ctx.paths, ctx.source.id, path));
+  const markdown = read(files.readme);
+  const extras = files.extras.flatMap((path) => {
+    const text = read(path);
+    return text === undefined ? [] : [{ path, markdown: text }];
+  });
+  if (markdown === undefined || extras.length !== files.extras.length) return undefined;
+  return { markdown, extras };
+}
+
+function sameSource(a: LessonSource, b: LessonSource): boolean {
+  const text = (source: LessonSource) =>
+    [source.markdown, ...source.extras.map((extra) => extra.markdown)]
+      .map(normalizeNewlines)
+      .join("\u0000");
+  return text(a) === text(b);
 }
 
 function writeText(path: string, text: string): void {
@@ -109,7 +162,7 @@ function relativeToRoot(ctx: ApplyContext, path: string): string {
 function transformReadme(
   ctx: ApplyContext,
   entry: MappingEntry,
-  markdown: string,
+  source: LessonSource,
   files: EntryFiles,
   commit: string,
 ): TransformResult {
@@ -118,7 +171,8 @@ function transformReadme(
     dir ? posix.relative(dir, asset) : asset,
   );
   return transformLesson({
-    markdown,
+    markdown: source.markdown,
+    extras: source.extras,
     entry,
     entries: ctx.mapping.entries,
     track: ctx.mapping.track,
@@ -164,8 +218,8 @@ type MdxOutcome = "written" | "unchanged" | "proposed" | "conflict";
 interface MdxInput {
   entry: MappingEntry;
   files: EntryFiles;
-  markdown: string;
-  previousMarkdown: string | undefined;
+  source: LessonSource;
+  previous: LessonSource | undefined;
   result: TransformResult;
   dir: string;
 }
@@ -184,11 +238,8 @@ function writeLessonMdx(ctx: ApplyContext, input: MdxInput): MdxOutcome {
   }
   if (normalizeNewlines(existing) === normalizeNewlines(input.result.mdx))
     return "unchanged";
-  const upstreamUnchanged =
-    input.previousMarkdown !== undefined &&
-    normalizeNewlines(input.previousMarkdown) === normalizeNewlines(input.markdown);
-  if (upstreamUnchanged) return "unchanged";
-  if (input.previousMarkdown === undefined) {
+  if (input.previous && sameSource(input.previous, input.source)) return "unchanged";
+  if (input.previous === undefined) {
     writeText(`${target}.proposed`, input.result.mdx);
     return "proposed";
   }
@@ -196,7 +247,7 @@ function writeLessonMdx(ctx: ApplyContext, input: MdxInput): MdxOutcome {
   const base = transformReadme(
     ctx,
     input.entry,
-    input.previousMarkdown,
+    input.previous,
     input.files,
     baseCommit,
   ).mdx;
@@ -213,14 +264,9 @@ function writeLessonMdx(ctx: ApplyContext, input: MdxInput): MdxOutcome {
  */
 export function applyEntry(ctx: ApplyContext, entry: MappingEntry): EntryApplyResult {
   const files = collectEntryFiles(ctx.cloneDir, entry);
-  const previousMarkdown = readIfExists(
-    upstreamFile(ctx.paths, ctx.source.id, files.readme),
-  );
-  const markdown = readFileSync(
-    assertRegularFileInside(ctx.cloneDir, files.readme),
-    "utf8",
-  );
-  const result = transformReadme(ctx, entry, markdown, files, ctx.commit);
+  const previous = readPinnedSource(ctx, files);
+  const source = readCloneSource(ctx.cloneDir, files);
+  const result = transformReadme(ctx, entry, source, files, ctx.commit);
   const dir = lessonDir(ctx.paths, ctx.mapping.track, entry);
 
   const assetPaths = writeLessonAssets(ctx, entry, result, dir);
@@ -231,14 +277,7 @@ export function applyEntry(ctx: ApplyContext, entry: MappingEntry): EntryApplyRe
     codePaths.push(target);
   }
 
-  const outcome = writeLessonMdx(ctx, {
-    entry,
-    files,
-    markdown,
-    previousMarkdown,
-    result,
-    dir,
-  });
+  const outcome = writeLessonMdx(ctx, { entry, files, source, previous, result, dir });
   for (const path of listEntryPaths(files)) {
     copyRaw(join(ctx.cloneDir, path), upstreamFile(ctx.paths, ctx.source.id, path));
   }

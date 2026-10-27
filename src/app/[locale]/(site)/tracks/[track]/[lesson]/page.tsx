@@ -11,6 +11,8 @@ import { Attribution } from "@/features/mdx/components/Attribution";
 import { LessonHeader } from "@/features/lesson/LessonHeader";
 import { LessonNav } from "@/features/lesson/LessonNav";
 import { FallbackBanner } from "@/features/lesson/FallbackBanner";
+import { MarkCompleteButton } from "@/features/progress";
+import { LessonQuiz } from "@/features/quiz/LessonQuiz";
 
 type Params = { locale: string; track: string; lesson: string };
 type Props = { params: Promise<Params> };
@@ -72,6 +74,12 @@ export default async function LessonPage({ params }: Props) {
         <MDXContent code={doc.body} components={components} />
         <Attribution items={doc.attribution} />
       </article>
+      {doc.quizData && (
+        <div className="mx-auto mt-12 max-w-[var(--measure)]">
+          <LessonQuiz quiz={doc.quizData} locale={locale} lessonKey={doc.key} />
+        </div>
+      )}
+      <MarkCompleteButton lessonKey={doc.key} />
       <LessonNav trackSlug={track} prev={neighbours.prev} next={neighbours.next} />
     </div>
   );

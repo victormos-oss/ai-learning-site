@@ -2,7 +2,11 @@ import { readFileSync } from "node:fs";
 import { posix } from "node:path";
 import { parse as parseYaml } from "yaml";
 import { z } from "zod";
-import { contentKeySchema, slugSchema } from "../../../src/features/content/schema";
+import {
+  contentKeySchema,
+  lessonTypeSchema,
+  slugSchema,
+} from "../../../src/features/content/schema";
 import { matchesAnyGlob } from "./glob";
 import type { SourceEntry } from "./sources-schema";
 
@@ -15,20 +19,6 @@ const safeRelativePath = z
     "path must be relative, posix and without `..`",
   );
 
-export const mappingEntrySchema = z.object({
-  from: safeRelativePath,
-  key: contentKeySchema,
-  module: z
-    .string()
-    .regex(/^\d{2}-[a-z0-9]+(-[a-z0-9]+)*$/, "module must look like 02-one-agent"),
-  slug: slugSchema,
-  order: z.number().int().positive(),
-  code: safeRelativePath.optional(),
-  assets: z.array(safeRelativePath).default([]),
-  estimatedMinutes: z.number().int().positive().max(600),
-});
-export type MappingEntry = z.infer<typeof mappingEntrySchema>;
-
 function duplicates(values: readonly string[]): string[] {
   const seen = new Set<string>();
   const found = new Set<string>();
@@ -38,6 +28,34 @@ function duplicates(values: readonly string[]): string[] {
   }
   return [...found];
 }
+
+export const mappingEntrySchema = z
+  .object({
+    from: safeRelativePath,
+    /** Extra upstream files of the same source, appended after `from` under an H2 each. */
+    alsoFrom: z.array(safeRelativePath).default([]),
+    key: contentKeySchema,
+    module: z
+      .string()
+      .regex(/^\d{2}-[a-z0-9]+(-[a-z0-9]+)*$/, "module must look like 02-one-agent"),
+    slug: slugSchema,
+    order: z.number().int().positive(),
+    type: lessonTypeSchema.default("learn"),
+    code: safeRelativePath.optional(),
+    assets: z.array(safeRelativePath).default([]),
+    estimatedMinutes: z.number().int().positive().max(600),
+  })
+  .superRefine((entry, ctx) => {
+    const repeated = duplicates([entry.from, ...entry.alsoFrom]);
+    if (repeated.length > 0) {
+      ctx.addIssue({
+        code: "custom",
+        message: `alsoFrom repeats a file: ${repeated.join(", ")}`,
+        path: ["alsoFrom"],
+      });
+    }
+  });
+export type MappingEntry = z.infer<typeof mappingEntrySchema>;
 
 export const mappingFileSchema = z
   .object({
@@ -83,6 +101,11 @@ export function entryRelative(entry: MappingEntry, relativePath: string): string
   return dir ? posix.join(dir, relativePath) : relativePath;
 }
 
+/** Every markdown file an entry is built from: `from` first, then `alsoFrom` in order. */
+export function entryFiles(entry: MappingEntry): string[] {
+  return [entry.from, ...entry.alsoFrom];
+}
+
 /** Lesson folder name such as `01-agent-loop`. */
 export function lessonDirName(entry: MappingEntry): string {
   return `${String(entry.order).padStart(2, "0")}-${entry.slug}`;
@@ -102,7 +125,7 @@ export function mappingProblems(mapping: Mapping, source: SourceEntry): string[]
     return [`source "${source.id}" is use: link, importing from it is forbidden`];
   }
   const files = mapping.entries.flatMap((entry) => [
-    entry.from,
+    ...entryFiles(entry),
     ...(entry.code ? [entryRelative(entry, entry.code)] : []),
     ...entry.assets.map((asset) => entryRelative(entry, asset)),
   ]);

@@ -1,7 +1,7 @@
 import type { Link, Root } from "mdast";
 import { posix } from "node:path";
 import type { Node } from "unist";
-import { entryDir, type MappingEntry } from "../lib/mapping-schema";
+import { entryDir, entryFiles, type MappingEntry } from "../lib/mapping-schema";
 import { mapTree } from "./tree";
 
 export interface LinkContext {
@@ -37,9 +37,23 @@ function resolveRelative(
   return { path: path === "." ? "" : path, isDir };
 }
 
+/** Lessons built from a folder README own the whole folder as a link target. */
+function isReadmeLesson(entry: MappingEntry): boolean {
+  return posix.basename(entry.from) === "README.md";
+}
+
+/**
+ * A link to a file some lesson is built from (`from` or `alsoFrom`), or to a
+ * section folder of a README-based lesson, becomes that lesson's route.
+ */
 function internalRoute(ctx: LinkContext, path: string): string | undefined {
+  const byFile = ctx.entries.find((candidate) => entryFiles(candidate).includes(path));
   const sectionDir = path.endsWith("/README.md") ? posix.dirname(path) : path;
-  const entry = ctx.entries.find((candidate) => entryDir(candidate) === sectionDir);
+  const entry =
+    byFile ??
+    ctx.entries.find(
+      (candidate) => isReadmeLesson(candidate) && entryDir(candidate) === sectionDir,
+    );
   return entry ? `/tracks/${ctx.track}/${entry.slug}` : undefined;
 }
 

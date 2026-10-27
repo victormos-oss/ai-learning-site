@@ -19,6 +19,9 @@
   "resetYes": "Yes, delete",
   "resetNo": "Cancel",
   "storageWarning": "Browser storage is unavailable here, so progress will not be saved after you leave.",
+  "exportError": "Could not export the file in this browser.",
+  "importTooLarge": "The file is larger than 256 KB and does not look like a progress export.",
+  "resetDone": "Progress deleted",
   "status": {
     "completed": "Completed",
     "started": "Started",

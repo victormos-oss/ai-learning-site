@@ -1,0 +1,43 @@
+---
+key: cc-zero.practice-landing
+slug: practice-landing
+title: Build a landing page with Claude Code
+summary: Hands-on practice. Describe your product, let Claude Code build a one-page site, review it and ship it.
+order: 5
+estimatedMinutes: 45
+type: practice
+quiz: false
+attribution:
+  - source: MuhammadUsmanGM/claude-code-best-practices
+    path: guides/getting-started.md
+    license: MIT
+    authors: Muhammad Usman and contributors
+    url: https://github.com/MuhammadUsmanGM/claude-code-best-practices/tree/main/guides
+    relation: original
+---
+
+You have installed Claude Code, given it a first task, written a CLAUDE.md and picked a permission mode. Time to put the four lessons together on something real: a one-page landing page for a product or service you actually care about. No coding experience is needed. You describe, Claude builds, you review.
+
+## The task
+
+Produce a single `index.html` (styles may be inline or in one `styles.css`) that presents your product: a headline, a short pitch, three benefits, one call to action and a contact line. It has to open in a browser from your disk and look fine on a phone.
+
+## Steps
+
+1. Create an empty folder and start `claude` inside it.
+2. Ask Claude to write a short `CLAUDE.md` first: what the product is, who the visitor is, the tone of voice, and that the page must stay a single HTML file without build tools.
+3. Describe the page in one message. Be specific: the exact headline, the three benefits in your own words, the wording of the button.
+4. Review the diff before accepting it. If a sentence does not sound like you, say so and ask for a rewrite of that sentence only.
+5. Open the file in a browser, then narrow the window to phone width. Ask Claude to fix anything that overflows.
+6. Run `/cost` and note how many tokens the whole exercise took.
+
+## What to check
+
+- The page opens from disk with no console errors.
+- Every text block is about your product, not placeholder prose.
+- Nothing is cut off at 360 px width.
+- The CLAUDE.md you wrote would make sense to a colleague who joins the project tomorrow.
+
+<Callout kind="note" title="About checking">
+Automatic verification of this practice is not available yet. Mark the lesson as done yourself once your checklist passes; a terminal-based check will arrive in a later release.
+</Callout>

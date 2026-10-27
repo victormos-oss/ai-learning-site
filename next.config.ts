@@ -27,6 +27,14 @@ const nextConfig: NextConfig = {
   images: { unoptimized: true },
   cacheComponents: true,
   partialPrefetching: true,
+  // Playwright opens the dev server as 127.0.0.1; without this the dev server blocks
+  // /_next resources from that origin and the pages never hydrate under test.
+  allowedDevOrigins: ["127.0.0.1"],
+  experimental: {
+    // Every route reads the locale param at the top, so no app shell is shared between
+    // links; the instant-navigation insight would fire on each client navigation.
+    instantInsights: { validationLevel: "manual-warning" },
+  },
   turbopack: {
     rules: {
       "*.css": {
