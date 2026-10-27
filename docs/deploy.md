@@ -15,18 +15,22 @@ sudo mkdir -p /srv/learn && cd /srv/learn
 curl -fsSL https://raw.githubusercontent.com/victormos-oss/ai-learning-site/main/docker/compose.yaml -o compose.yaml
 printf 'NEXT_PUBLIC_SITE_URL=https://learn.vdmitriev.com\n' > .env.production
 chmod 600 .env.production
+# nginx на VPS2 живёт в контейнере и ходит на хост через host.docker.internal,
+# поэтому порт публикуется на адресе docker-моста, а не на 127.0.0.1.
+printf 'IMAGE_TAG=latest\nAPP_BIND=172.17.0.1\n' > .env
 ss -ltn | grep 3141 || echo "port 3141 free"
-IMAGE_TAG=latest docker compose pull && IMAGE_TAG=latest docker compose up -d
-curl -fsS http://127.0.0.1:3141/api/health
+docker compose pull && docker compose up -d
+curl -fsS http://172.17.0.1:3141/api/health
 ```
 
 Образ публичный (репозиторий публичный), токен для `docker pull` не нужен.
 
 ## DNS и TLS
 
-- Запись `A learn.vdmitriev.com → 31.70.101.86` через API Cloudflare, без прокси (серое облако), как у остальных поддоменов.
-- Сертификат: `certbot certonly --webroot -w /var/www/certbot -d learn.vdmitriev.com` на хосте; nginx-контейнер монтирует `/etc/letsencrypt` только для чтения.
-- Конфиг nginx: `docker/nginx-site.conf` копируется в папку sites, которая смонтирована в nginx read-only, затем `docker restart <nginx>` (не reload, см. память про VPS2). Зона `limit_req_zone ... zone=learn_api` добавляется в `conf.d` один раз.
+- Запись `A learn.vdmitriev.com → 31.70.101.86` через API Cloudflare, без прокси (серое облако), как у остальных поддоменов. Токен лежит на VPS2, вызов делается с сервера.
+- nginx: контейнер `dion-disk-nginx-1`, единственный конфиг `/opt/dion-disk/nginx.conf` смонтирован read-only. Блоки из `docker/nginx-site.conf` дописываются в конец этого файла (`cat >>`, тот же inode, не `mv`), синтаксис проверяется зеркальным контейнером, затем `docker restart dion-disk-nginx-1` (reload не подхватывает bind-mount).
+- Порядок: сначала блок 80 и рестарт, потом `certbot certonly --webroot -w /opt/dion-disk/acme -d learn.vdmitriev.com` на хосте (`/opt/dion-disk/acme` = `/var/www/acme` в контейнере, `/etc/letsencrypt` смонтирован read-only), потом блок 443 и ещё один рестарт.
+- Тот же блок добавляется в `Conplex/nginx.conf` репозитория Camerata: скрипт выкладки Camerata сверяет файл с продом и предупреждает о расхождении.
 
 ## Проверка после выкладки
 

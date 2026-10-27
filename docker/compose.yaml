@@ -10,7 +10,9 @@ services:
     env_file:
       - .env.production
     ports:
-      - "127.0.0.1:3141:3000"
+      # nginx on VPS2 runs in a container and reaches the host via host.docker.internal,
+      # so the app is published on the docker bridge address (APP_BIND=172.17.0.1 in .env).
+      - "${APP_BIND:-127.0.0.1}:3141:3000"
     read_only: true
     tmpfs:
       - /tmp
