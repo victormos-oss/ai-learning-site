@@ -7,7 +7,9 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   {
-    // eslint-config-next already registers the jsx-a11y plugin; only raise its rules to strict.
+    // eslint-config-next already registers the jsx-a11y plugin for these files; only raise
+    // its rules to strict. Plain .cjs config files are outside its scope and stay on the base rules.
+    files: ["**/*.{js,jsx,mjs,ts,tsx,mts}"],
     rules: {
       ...jsxA11y.flatConfigs.strict.rules,
       "no-restricted-imports": [

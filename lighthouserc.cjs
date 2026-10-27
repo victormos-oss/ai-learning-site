@@ -14,7 +14,7 @@ module.exports = {
         `${BASE}/es/tracks`,
       ],
       numberOfRuns: 1,
-      settings: { preset: "mobile" },
+      // Lighthouse defaults to the mobile profile; "mobile" is not a valid preset name.
     },
     assert: {
       assertions: {

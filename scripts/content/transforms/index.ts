@@ -141,15 +141,43 @@ function prepareDocument(
 
 interface PreparedExtra {
   section: ExtraSection;
+  assets: AssetRef[];
   warnings: string[];
 }
 
+/**
+ * Image paths of an extra are resolved against the main entry's folder, like
+ * `assetFiles`; an extra from another folder reports its images as missing.
+ */
 function prepareExtra(input: TransformInput, extra: ExtraDocument): PreparedExtra {
   const prepared = prepareDocument(input, extra.markdown, extra.path);
   return {
     section: { heading: headingFromFileName(extra.path), tree: prepared.tree },
+    assets: prepared.assets,
     warnings: prepared.warnings.map((warning) => `${extra.path}: ${warning}`),
   };
+}
+
+/** One asset per base name across the main document and its extras. */
+function mergeAssets(groups: readonly (readonly AssetRef[])[]): {
+  assets: AssetRef[];
+  warnings: string[];
+} {
+  return groups.flat().reduce<{ assets: AssetRef[]; warnings: string[] }>(
+    (acc, asset) => {
+      const seen = acc.assets.find((known) => known.base === asset.base);
+      if (!seen) return { ...acc, assets: [...acc.assets, asset] };
+      if (seen.file === asset.file) return acc;
+      return {
+        ...acc,
+        warnings: [
+          ...acc.warnings,
+          `asset "${asset.base}" maps to both ${seen.file} and ${asset.file}; kept the first`,
+        ],
+      };
+    },
+    { assets: [], warnings: [] },
+  );
 }
 
 /** Main body, then the appended extras, then the main document's See Also list. */
@@ -173,11 +201,16 @@ export function transformLesson(input: TransformInput): TransformResult {
   const frontmatter = buildFrontmatter(input, main.title, main.summary);
   const body = stringifyMdx(withCode).trimEnd();
   const yaml = stringifyYaml(frontmatter, { lineWidth: 0 });
+  const merged = mergeAssets([main.assets, ...extras.map((extra) => extra.assets)]);
   return {
     frontmatter,
     body,
     mdx: `---\n${yaml}---\n\n${body}\n`,
-    assets: main.assets,
-    warnings: [...main.warnings, ...extras.flatMap((extra) => extra.warnings)],
+    assets: merged.assets,
+    warnings: [
+      ...main.warnings,
+      ...extras.flatMap((extra) => extra.warnings),
+      ...merged.warnings,
+    ],
   };
 }

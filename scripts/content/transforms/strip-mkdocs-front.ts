@@ -8,7 +8,9 @@ import {
 } from "./tree";
 
 /** `---\n...\n---\n` at the very start of the file (mkdocs `hide:`, `title:` and so on). */
-const FRONTMATTER = /^---\r?\n[\s\S]*?\r?\n---\r?\n(?:\r?\n)*/;
+const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---\r?\n(?:\r?\n)*/;
+/** First non-empty line of a yaml mapping: `key:` or `key: value`. */
+const YAML_KEY = /^[\w-]+\s*:/;
 /** Material icon shortcodes such as `:octicons-arrow-left-24:` or `:material-check:`. */
 const ICON_SHORTCODE = /:[a-z]+(?:-[a-z0-9]+)+:/i;
 /** Attribute lists such as `{ .md-button .md-button--primary }` or `{: #id }`. */
@@ -17,9 +19,17 @@ const SEPARATORS_ONLY = /^[\s·|•/]*$/;
 const SEE_ALSO = /^see also$/i;
 const WHATS_NEXT = /^(what'?s next|next steps)$/i;
 
-/** Drops a yaml frontmatter block the upstream site generator needed; the import writes its own. */
+/**
+ * Drops a yaml frontmatter block the upstream site generator needed; the import
+ * writes its own. A file that merely opens with a thematic break (`---` followed
+ * by prose) is left alone, otherwise its title and intro would vanish.
+ */
 export function stripMkdocsFrontmatter(markdown: string): string {
-  return markdown.replace(FRONTMATTER, "");
+  const match = FRONTMATTER.exec(markdown);
+  if (!match) return markdown;
+  const firstLine = (match[1] ?? "").split(/\r?\n/).find((line) => line.trim() !== "");
+  if (!firstLine || !YAML_KEY.test(firstLine)) return markdown;
+  return markdown.slice(match[0].length);
 }
 
 function isSeparatorText(child: PhrasingContent): boolean {

@@ -14,12 +14,20 @@ import {
   stripMkdocsFrontmatter,
 } from "../../../../scripts/content/transforms/strip-mkdocs-front";
 
-const roundTrip = (md: string, fn: (t: ReturnType<typeof parseMarkdown>) => ReturnType<typeof parseMarkdown>) =>
-  stringifyMdx(fn(parseMarkdown(md)));
+const roundTrip = (
+  md: string,
+  fn: (t: ReturnType<typeof parseMarkdown>) => ReturnType<typeof parseMarkdown>,
+) => stringifyMdx(fn(parseMarkdown(md)));
 
 describe("mkdocsAdmonitions", () => {
   it("turns a titled note with an indented body into a Callout", () => {
-    const md = ['!!! note "Heads up"', "", "    Body paragraph with `code`.", "", "After."].join("\n");
+    const md = [
+      '!!! note "Heads up"',
+      "",
+      "    Body paragraph with `code`.",
+      "",
+      "After.",
+    ].join("\n");
     const out = roundTrip(md, mkdocsAdmonitions);
     expect(out).toContain('<Callout kind="note" title="Heads up">');
     expect(out).toContain("Body paragraph with `code`.");
@@ -77,6 +85,16 @@ describe("stripMkdocsFrontmatter", () => {
     const md = "# Title\n\n---\n\nBody.";
     expect(stripMkdocsFrontmatter(md)).toBe(md);
   });
+
+  it("keeps a README that opens with a rule and has another rule later", () => {
+    const md = "---\n\n# Title\n\nIntro.\n\n---\n\nBody.";
+    expect(stripMkdocsFrontmatter(md)).toBe(md);
+  });
+
+  it("keeps an empty rule pair", () => {
+    const md = "---\n---\n# Title";
+    expect(stripMkdocsFrontmatter(md)).toBe(md);
+  });
 });
 
 describe("stripMaterialNav", () => {
@@ -107,7 +125,9 @@ describe("splitSeeAlso", () => {
     expect(stringifyMdx(result.tree)).not.toContain("See Also");
     expect(result.seeAlso).toHaveLength(1);
     expect(result.seeAlso[0]?.type).toBe("list");
-    expect(stringifyMdx({ type: "root", children: result.seeAlso })).toContain("[A](a.md)");
+    expect(stringifyMdx({ type: "root", children: result.seeAlso })).toContain(
+      "[A](a.md)",
+    );
   });
 
   it("folds a link-free What's Next lead-in into See Also", () => {
@@ -160,7 +180,9 @@ describe("appendExtras", () => {
     expect(out).toContain("## Cost Management");
     expect(out).toContain("### Extra Section");
     expect(out).toContain("#### Deep");
-    expect(out.indexOf("## Cost Management")).toBeGreaterThan(out.indexOf("## Main Section"));
+    expect(out.indexOf("## Cost Management")).toBeGreaterThan(
+      out.indexOf("## Main Section"),
+    );
   });
 
   it("never demotes below H6 and returns the main tree untouched when no extras", () => {

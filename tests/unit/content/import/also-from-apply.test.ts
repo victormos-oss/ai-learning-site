@@ -1,4 +1,11 @@
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
@@ -16,7 +23,7 @@ sources:
     license: MIT
     authors: Muhammad Usman and contributors
     use: adapt
-    include: ["guides/*.md"]
+    include: ["guides/*.md", "guides/images/*.svg"]
 `;
 
 const MAPPING_YAML = `
@@ -25,6 +32,7 @@ track: claude-code-zero
 entries:
   - from: guides/context-management.md
     alsoFrom: [guides/cost-management.md]
+    assets: ["images/*.svg"]
     key: cc-zero.context-and-cost
     module: 01-getting-started
     slug: context-and-cost
@@ -54,6 +62,8 @@ const COST_MD = [
   "",
   "Tokens cost money.",
   "",
+  "![Spend chart](images/spend.svg)",
+  "",
   "## Track Your Spend",
   "",
   "Use `/cost`.",
@@ -78,6 +88,10 @@ function setupWorkspace(): { root: string; clones: string; clone: string } {
   write(join(root, "content/sources/mapping/cc-best-practices-usman.yaml"), MAPPING_YAML);
   write(join(clone, "guides/context-management.md"), CONTEXT_MD);
   write(join(clone, "guides/cost-management.md"), COST_MD);
+  write(
+    join(clone, "guides/images/spend.svg"),
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><rect width="10" height="10"/></svg>',
+  );
   return { root, clones, clone };
 }
 
@@ -99,10 +113,10 @@ describe("import with alsoFrom (temp workspace)", () => {
 
   afterAll(() => rmSync(join(ws.root, ".."), { recursive: true, force: true }));
 
-  it("--check reports both files as NEW", () => {
+  it("--check reports both markdown files and the extra's image as NEW", () => {
     const result = run("check");
     expect(result.exitCode).toBe(1);
-    expect(result.sources[0]?.comparison.counts.NEW).toBe(2);
+    expect(result.sources[0]?.comparison.counts.NEW).toBe(3);
   });
 
   it("--apply writes one lesson with the extra file appended and both files locked", () => {
@@ -118,14 +132,25 @@ describe("import with alsoFrom (temp workspace)", () => {
     expect(mdx).toContain(`/blob/${COMMIT}/guides/hooks.md`);
     // Only the main See Also survives, after the appended material.
     expect(mdx.match(/## See Also/g)).toHaveLength(1);
-    expect(mdx.indexOf("## See Also")).toBeGreaterThan(mdx.indexOf("### Track Your Spend"));
+    expect(mdx.indexOf("## See Also")).toBeGreaterThan(
+      mdx.indexOf("### Track Your Spend"),
+    );
+    // An image referenced only by the extra file is rewritten and its asset copied.
+    expect(mdx).toContain('<Figure src="spend" alt="Spend chart" />');
+    expect(existsSync(join(enMdx, "..", "assets", "spend.en.svg"))).toBe(true);
     const lock = readLock(join(ws.root, "content/sources/sources.lock.json"));
     expect(Object.keys(lock.sources["cc-best-practices-usman"]?.files ?? {})).toEqual([
       "guides/context-management.md",
       "guides/cost-management.md",
+      "guides/images/spend.svg",
     ]);
     expect(
-      existsSync(join(ws.root, "content/_upstream/cc-best-practices-usman/guides/cost-management.md")),
+      existsSync(
+        join(
+          ws.root,
+          "content/_upstream/cc-best-practices-usman/guides/cost-management.md",
+        ),
+      ),
     ).toBe(true);
   });
 
@@ -138,11 +163,19 @@ describe("import with alsoFrom (temp workspace)", () => {
 
   it("a change in the extra file alone is detected and merged into a proposal", () => {
     const cost = join(ws.clone, "guides/cost-management.md");
-    writeFileSync(cost, readFileSync(cost, "utf8").replace("Tokens cost money.", "Tokens cost real money."));
+    writeFileSync(
+      cost,
+      readFileSync(cost, "utf8").replace("Tokens cost money.", "Tokens cost real money."),
+    );
     expect(run("check").exitCode).toBe(1);
-    const edited = readFileSync(enMdx, "utf8").replace("Intro about context.", "Intro (edited).");
+    const edited = readFileSync(enMdx, "utf8").replace(
+      "Intro about context.",
+      "Intro (edited).",
+    );
     writeFileSync(enMdx, edited);
-    const result = run("apply", { resolveCommit: () => "1111111111111111111111111111111111111111" });
+    const result = run("apply", {
+      resolveCommit: () => "1111111111111111111111111111111111111111",
+    });
     expect(result.exitCode).toBe(0);
     const proposed = readFileSync(`${enMdx}.proposed`, "utf8");
     expect(proposed).toContain("Tokens cost real money.");

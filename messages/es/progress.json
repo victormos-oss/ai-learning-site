@@ -22,6 +22,7 @@
   "exportError": "No se pudo exportar el archivo en este navegador.",
   "importTooLarge": "El archivo supera los 256 KB y no parece una exportación de progreso.",
   "resetDone": "Progreso borrado",
+  "saveFailed": "El navegador no guardó el progreso; se perderá al salir de esta página.",
   "status": {
     "completed": "Completada",
     "started": "Empezada",

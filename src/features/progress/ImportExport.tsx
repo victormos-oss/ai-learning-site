@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState, type ChangeEvent } from "react";
+import { useEffect, useId, useRef, useState, type ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
 import { useAnnounce } from "@/features/a11y/Announcer";
 import { downloadProgress } from "./export";
@@ -54,21 +54,49 @@ function ImportField({ onFile }: ImportFieldProps) {
 
 type ResetControlsProps = { onConfirm: () => void };
 
-/** Two-step reset: the question and both answers are plain buttons, no dialog. */
+/**
+ * Two-step reset: the question and both answers are plain buttons, no dialog.
+ * Opening moves focus to the safe answer; closing returns it to the reset
+ * button, so keyboard users never land on the document body.
+ */
 function ResetControls({ onConfirm }: ResetControlsProps) {
   const t = useTranslations("progress");
   const [isConfirming, setIsConfirming] = useState(false);
+  const resetRef = useRef<HTMLButtonElement>(null);
+  const cancelRef = useRef<HTMLButtonElement>(null);
+  const shouldRestoreFocus = useRef(false);
+
+  useEffect(() => {
+    if (isConfirming) {
+      cancelRef.current?.focus();
+      return;
+    }
+    if (shouldRestoreFocus.current) {
+      shouldRestoreFocus.current = false;
+      resetRef.current?.focus();
+    }
+  }, [isConfirming]);
+
+  const close = () => {
+    shouldRestoreFocus.current = true;
+    setIsConfirming(false);
+  };
 
   if (!isConfirming) {
     return (
-      <button type="button" onClick={() => setIsConfirming(true)} className={QUIET_CLASS}>
+      <button
+        ref={resetRef}
+        type="button"
+        onClick={() => setIsConfirming(true)}
+        className={QUIET_CLASS}
+      >
         {t("reset")}
       </button>
     );
   }
 
   const confirm = () => {
-    setIsConfirming(false);
+    close();
     onConfirm();
   };
 
@@ -78,11 +106,7 @@ function ResetControls({ onConfirm }: ResetControlsProps) {
       <button type="button" onClick={confirm} className={BUTTON_CLASS}>
         {t("resetYes")}
       </button>
-      <button
-        type="button"
-        onClick={() => setIsConfirming(false)}
-        className={QUIET_CLASS}
-      >
+      <button ref={cancelRef} type="button" onClick={close} className={QUIET_CLASS}>
         {t("resetNo")}
       </button>
     </div>
@@ -93,7 +117,8 @@ function ResetControls({ onConfirm }: ResetControlsProps) {
 export function ImportExport() {
   const t = useTranslations("progress");
   const announce = useAnnounce();
-  const { state, isPersistent, importProgress, resetProgress } = useProgress();
+  const { state, isPersistent, importProgress, resetProgress, lastWriteResult } =
+    useProgress();
   const [message, setMessage] = useState<string | null>(null);
 
   const report = (text: string) => {
@@ -112,7 +137,9 @@ export function ImportExport() {
       report(t(failureKey(result.reason)));
       return;
     }
-    report(t("imported", { count: importProgress(result.state) }));
+    const count = importProgress(result.state);
+    // The merge is in memory either way; say so when the browser refused to keep it.
+    report(lastWriteResult().ok ? t("imported", { count }) : t("saveFailed"));
   };
 
   const onReset = () => {

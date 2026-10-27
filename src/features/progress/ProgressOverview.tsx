@@ -35,7 +35,7 @@ export function ProgressOverview({ lessons, trackSlug }: Props) {
       </p>
       <progress
         value={summary.done}
-        max={summary.total}
+        max={Math.max(1, summary.total)}
         aria-label={t("title")}
         className="mt-3 block h-3 w-full appearance-none overflow-hidden rounded-flap border border-paper-line bg-paper-line [&::-moz-progress-bar]:bg-ink [&::-webkit-progress-bar]:bg-paper-line [&::-webkit-progress-value]:bg-ink"
       >

@@ -22,6 +22,7 @@
   "exportError": "Could not export the file in this browser.",
   "importTooLarge": "The file is larger than 256 KB and does not look like a progress export.",
   "resetDone": "Progress deleted",
+  "saveFailed": "The browser refused to save the progress; it will be lost when you leave this page.",
   "status": {
     "completed": "Completed",
     "started": "Started",

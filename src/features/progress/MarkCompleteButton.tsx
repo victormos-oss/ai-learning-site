@@ -35,7 +35,7 @@ export function MarkCompleteButton({ lessonKey }: Props) {
       return;
     }
     progressActions.markCompleted(lessonKey);
-    announce(t("announceDone"));
+    announce(progressActions.lastWriteResult().ok ? t("announceDone") : t("saveFailed"));
   };
 
   return (
