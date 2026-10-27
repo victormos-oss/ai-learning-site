@@ -3,7 +3,8 @@
 [English](README.md) · [中文](README.zh.md) · [日本語](README.ja.md)
 
 `s01` → [s02](../s02_tool_use/) → s03 → s04 → ... → s16 → s17
-> *"One loop & Bash is all you need"* — One tool + one loop = one Agent.
+
+> _"One loop & Bash is all you need"_ — One tool + one loop = one Agent.
 >
 > **Harness Layer**: The Loop — the first bridge between the model and the real world.
 
@@ -27,10 +28,10 @@ Every round-trip, you're the middle layer. Automating that is what this chapter 
 
 A `while True` loop: keep going when the model calls a tool, stop when it doesn't. The loop checks the response content blocks directly:
 
-| Signal | Meaning | Loop Action |
-|--------|---------|-------------|
-| Contains a `tool_use` block | Model requests a tool call | Execute → feed result back → continue |
-| Contains no `tool_use` block | Model did not call a tool | Exit loop |
+| Signal                       | Meaning                    | Loop Action                           |
+| ---------------------------- | -------------------------- | ------------------------------------- |
+| Contains a `tool_use` block  | Model requests a tool call | Execute → feed result back → continue |
+| Contains no `tool_use` block | Model did not call a tool  | Exit loop                             |
 
 ---
 
@@ -150,6 +151,5 @@ What to watch for: When does the model call a tool (loop continues), and when do
 Right now the model only has bash — reading files requires `cat`, writing files requires `echo ... >`, finding files requires `find`. Ugly and error-prone.
 
 → s02 Tool Use: What happens when we give it 5 proper tools? Will the model call multiple tools at once? Will parallel tool executions step on each other?
-
 
 <!-- translation-sync: zh@v2, en@v2, ja@v2 -->

@@ -15,7 +15,8 @@ test.describe("landing board", () => {
       "href",
       /\/ru\/tracks\/claude-code-zero\/install$/,
     );
-    await expect(firstRow).toHaveAccessibleName(/01 .*Отправляется/);
+    // The board shows the short Russian name, not the English lesson title.
+    await expect(firstRow).toHaveAccessibleName(/01 .*Установка.*Отправляется/);
     await expectNoA11yViolations(page);
   });
 

@@ -4,6 +4,7 @@ import {
   attributionSchema,
   contentKeySchema,
   localeSchema,
+  localizedStringSchema,
   slugSchema,
   translationMetaSchema,
 } from "./common";
@@ -14,6 +15,8 @@ const lessonBaseSchema = z.object({
   key: contentKeySchema,
   slug: slugSchema,
   title: z.string().min(1).max(120),
+  /** Short name for the departures board, per language; the board falls back to `title`. */
+  boardTitle: localizedStringSchema.optional(),
   summary: z.string().min(1).max(400),
   order: z.number().int().positive(),
   access: accessLevelSchema.optional(),

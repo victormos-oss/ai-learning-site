@@ -96,14 +96,14 @@ claude --continue          # Continue the last conversation with a new prompt
 
 ## Common Flags
 
-| Flag | Description |
-|------|-------------|
-| `-p "prompt"` | Run in non-interactive (print) mode |
-| `--resume` | Resume the last conversation |
-| `--continue` | Continue the last conversation |
-| `--model` | Specify a model (e.g., `claude-sonnet-4-6`) |
-| `--allowedTools` | Restrict which tools Claude can use |
-| `--verbose` | Show detailed tool usage output |
+| Flag             | Description                                 |
+| ---------------- | ------------------------------------------- |
+| `-p "prompt"`    | Run in non-interactive (print) mode         |
+| `--resume`       | Resume the last conversation                |
+| `--continue`     | Continue the last conversation              |
+| `--model`        | Specify a model (e.g., `claude-sonnet-4-6`) |
+| `--allowedTools` | Restrict which tools Claude can use         |
+| `--verbose`      | Show detailed tool usage output             |
 
 For more CLI options and shortcuts, see [Tips and Tricks](tips-and-tricks.md).
 

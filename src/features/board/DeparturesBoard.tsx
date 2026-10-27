@@ -1,12 +1,14 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { pickLocalized } from "@/features/content/resolve";
+import type { ContentLocale } from "@/features/content/schema";
 import type { LessonRecord } from "@/features/content/types";
 import { FlightRow, type FlightStatus } from "./FlightRow";
 
 type Props = {
   trackSlug: string;
   lessons: readonly LessonRecord[];
-  locale: string;
+  locale: ContentLocale;
   /** Index of the lesson that is "departing" (the next one to take). */
   nextIndex?: number;
 };
@@ -42,7 +44,11 @@ export function DeparturesBoard({ trackSlug, lessons, locale, nextIndex = 0 }: P
               key={lesson.key}
               href={`/tracks/${trackSlug}/${lesson.slug}`}
               number={String(index + 1).padStart(2, "0")}
-              name={lesson.title}
+              name={
+                lesson.boardTitle
+                  ? pickLocalized(lesson.boardTitle, locale)
+                  : lesson.title
+              }
               duration={
                 lesson.estimatedMinutes
                   ? t("minutes", { count: lesson.estimatedMinutes })

@@ -4,7 +4,9 @@ import { stripLeadingRules } from "../../../../scripts/content/transforms/strip-
 
 describe("stripLeadingRules", () => {
   it("removes rules at the start of the body but keeps later ones", () => {
-    const out = stringifyMdx(stripLeadingRules(parseMarkdown("---\n\n---\n\nText\n\n---\n\nMore\n")));
+    const out = stringifyMdx(
+      stripLeadingRules(parseMarkdown("---\n\n---\n\nText\n\n---\n\nMore\n")),
+    );
     expect(out.trimStart().startsWith("Text")).toBe(true);
     expect(out).toMatch(/\n(---|\*\*\*)\n/);
   });

@@ -13,6 +13,8 @@ const PAGES = [
   { name: "track-ru", path: "/ru/tracks/claude-code-zero" },
   { name: "lesson-en", path: "/en/tracks/claude-code-zero/agent-loop" },
   { name: "lesson-ru-fallback", path: "/ru/tracks/claude-code-zero/agent-loop" },
+  { name: "progress-ru", path: "/ru/progress" },
+  { name: "home-ru", path: "/ru" },
 ];
 const WIDTHS = [1440, 390];
 

@@ -41,8 +41,6 @@
   white-space: nowrap;
 }
 
-
-
 .flap {
   position: relative;
   display: inline-flex;
@@ -226,7 +224,8 @@
 .departures {
   display: grid;
   grid-template-columns: 5.5rem minmax(0, 1fr) auto auto;
-  column-gap: 1.25rem;
+  /* Wider than the word gap inside a name, so columns never read as one phrase. */
+  column-gap: 2.25rem;
 }
 
 .departures > * {
@@ -296,8 +295,15 @@
   overflow: hidden;
 }
 
+/*
+ * A name longer than the column is cut at a word, never through a plate:
+ * words that do not fit wrap onto a second line that the cell's height hides.
+ * The full name stays in the visually hidden text of the row.
+ */
 .flight-row__cell--name .flap-text__plates {
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+  max-block-size: var(--flap-h);
+  overflow: hidden;
 }
 
 .flight-row__strip {

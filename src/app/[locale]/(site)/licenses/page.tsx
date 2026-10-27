@@ -19,7 +19,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: t("title") };
 }
 
-function SourceItem({ source, linkLabel }: { source: LicensedSource; linkLabel: string }) {
+function SourceItem({
+  source,
+  linkLabel,
+}: {
+  source: LicensedSource;
+  linkLabel: string;
+}) {
   return (
     <li className="py-4">
       <p className="font-semibold">{source.name}</p>
@@ -103,7 +109,10 @@ export default async function LicensesPage({ params }: Props) {
             linkLabel={t("viewOnGitHub")}
           />
           <section aria-labelledby="site-heading" className="mt-10">
-            <h2 id="site-heading" className="font-board text-3xl font-bold tracking-wide uppercase">
+            <h2
+              id="site-heading"
+              className="font-board text-3xl font-bold tracking-wide uppercase"
+            >
               {t("siteCode")}
             </h2>
             <p className="mt-2 text-ink-muted">{t("siteCodeNote")}</p>
@@ -112,7 +121,10 @@ export default async function LicensesPage({ params }: Props) {
 
         {mit && (
           <section aria-labelledby="mit-heading">
-            <h2 id="mit-heading" className="font-board text-3xl font-bold tracking-wide uppercase">
+            <h2
+              id="mit-heading"
+              className="font-board text-3xl font-bold tracking-wide uppercase"
+            >
               {t("licenseText")}: MIT
             </h2>
             <pre

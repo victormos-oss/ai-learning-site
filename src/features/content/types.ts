@@ -1,10 +1,12 @@
-import type { AccessLevel, Attribution, ContentLocale } from "./schema";
+import type { AccessLevel, Attribution, ContentLocale, LocalizedString } from "./schema";
 import type { Quiz } from "@/features/quiz/schema";
 
 export type LessonRecord = {
   key: string;
   slug: string;
   title: string;
+  /** Short localized name for the departures board; absent means `title`. */
+  boardTitle?: LocalizedString;
   summary: string;
   order: number;
   locale: ContentLocale;

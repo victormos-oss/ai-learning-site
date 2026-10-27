@@ -47,9 +47,9 @@ describe("mapping entry: alsoFrom and type", () => {
   });
 
   it("rejects an unknown type", () => {
-    expect(mappingFileSchema.safeParse(mapping({ ...baseEntry, type: "video" })).success).toBe(
-      false,
-    );
+    expect(
+      mappingFileSchema.safeParse(mapping({ ...baseEntry, type: "video" })).success,
+    ).toBe(false);
   });
 
   it("rejects alsoFrom that repeats `from` or itself", () => {
