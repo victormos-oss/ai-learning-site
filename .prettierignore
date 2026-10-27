@@ -1,0 +1,9 @@
+tests/fixtures/
+content/
+.content-collections/
+public/content/
+.next/
+coverage/
+playwright-report/
+test-results/
+.impeccable/
